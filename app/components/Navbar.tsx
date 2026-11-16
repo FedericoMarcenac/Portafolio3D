@@ -6,36 +6,49 @@ import Link from "next/link";
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  const handleScrollTo = (targetId: string, e: React.MouseEvent) => {
+    e.preventDefault();
+    setMobileMenuOpen(false);
+    const element = document.getElementById(targetId);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
     <header className="fixed top-0 inset-x-0 z-50 bg-transparent border-0 pointer-events-none">
       <div className="max-w-7xl mx-auto px-6 sm:px-10 h-20 sm:h-24 flex items-center justify-end pointer-events-auto">
         
-        {/* Enlaces de navegación: Inicio, Proyectos, Sobre mí, Contáctame */}
+        {/* Enlaces de navegación con scroll suave cinemático */}
         <nav className="hidden md:flex items-center gap-9 text-sm sm:text-base font-medium tracking-wide">
-          <Link
+          <a
             href="#inicio"
-            className="text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)] hover:drop-shadow-[0_0_12px_rgba(255,255,255,0.95)] transition-all duration-200 relative py-1 after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[2px] after:bg-white after:transition-all after:duration-200 hover:after:w-full"
+            onClick={(e) => handleScrollTo("inicio", e)}
+            className="text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)] hover:drop-shadow-[0_0_12px_rgba(255,255,255,0.95)] transition-all duration-200 relative py-1 after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[2px] after:bg-white after:transition-all after:duration-200 hover:after:w-full cursor-pointer"
           >
             Inicio
-          </Link>
-          <Link
+          </a>
+          <a
             href="#proyectos"
-            className="text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)] hover:drop-shadow-[0_0_12px_rgba(255,255,255,0.95)] transition-all duration-200 relative py-1 after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[2px] after:bg-white after:transition-all after:duration-200 hover:after:w-full"
+            onClick={(e) => handleScrollTo("proyectos", e)}
+            className="text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)] hover:drop-shadow-[0_0_12px_rgba(255,255,255,0.95)] transition-all duration-200 relative py-1 after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[2px] after:bg-white after:transition-all after:duration-200 hover:after:w-full cursor-pointer"
           >
             Proyectos
-          </Link>
-          <Link
+          </a>
+          <a
             href="#sobre-mi"
-            className="text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)] hover:drop-shadow-[0_0_12px_rgba(255,255,255,0.95)] transition-all duration-200 relative py-1 after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[2px] after:bg-white after:transition-all after:duration-200 hover:after:w-full"
+            onClick={(e) => handleScrollTo("sobre-mi", e)}
+            className="text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)] hover:drop-shadow-[0_0_12px_rgba(255,255,255,0.95)] transition-all duration-200 relative py-1 after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[2px] after:bg-white after:transition-all after:duration-200 hover:after:w-full cursor-pointer"
           >
             Sobre mí
-          </Link>
-          <Link
+          </a>
+          <a
             href="#contacto"
-            className="text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)] hover:drop-shadow-[0_0_12px_rgba(255,255,255,0.95)] transition-all duration-200 relative py-1 after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[2px] after:bg-white after:transition-all after:duration-200 hover:after:w-full"
+            onClick={(e) => handleScrollTo("contacto", e)}
+            className="text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)] hover:drop-shadow-[0_0_12px_rgba(255,255,255,0.95)] transition-all duration-200 relative py-1 after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[2px] after:bg-white after:transition-all after:duration-200 hover:after:w-full cursor-pointer"
           >
             Contáctame
-          </Link>
+          </a>
         </nav>
 
         {/* Botón de menú para celulares */}
@@ -59,21 +72,21 @@ export default function Navbar() {
 
       </div>
 
-      {/* Menú desplegable para móviles */}
+      {/* Menú desplegable para móviles con scroll suave */}
       {mobileMenuOpen && (
         <div className="md:hidden bg-black/90 backdrop-blur-xl px-6 py-6 flex flex-col gap-4 text-base font-medium border-b border-white/10 pointer-events-auto">
-          <Link href="#inicio" onClick={() => setMobileMenuOpen(false)} className="text-white py-1">
+          <a href="#inicio" onClick={(e) => handleScrollTo("inicio", e)} className="text-white py-1">
             Inicio
-          </Link>
-          <Link href="#proyectos" onClick={() => setMobileMenuOpen(false)} className="text-white py-1">
+          </a>
+          <a href="#proyectos" onClick={(e) => handleScrollTo("proyectos", e)} className="text-white py-1">
             Proyectos
-          </Link>
-          <Link href="#sobre-mi" onClick={() => setMobileMenuOpen(false)} className="text-white py-1">
+          </a>
+          <a href="#sobre-mi" onClick={(e) => handleScrollTo("sobre-mi", e)} className="text-white py-1">
             Sobre mí
-          </Link>
-          <Link href="#contacto" onClick={() => setMobileMenuOpen(false)} className="text-white py-1">
+          </a>
+          <a href="#contacto" onClick={(e) => handleScrollTo("contacto", e)} className="text-white py-1">
             Contáctame
-          </Link>
+          </a>
         </div>
       )}
     </header>

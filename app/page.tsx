@@ -18,16 +18,16 @@ export default function Home() {
       {/* 1. Navbar 100% transparente sin título y con enlaces personalizados */}
       <Navbar />
 
-      {/* 2. Sección Principal Continua: 1500vh de scroll para unir las secuencias y la repetición cinemática */}
+      {/* 2. Sección Principal Continua: 850vh de scroll ágil y dinámico */}
       <section
         ref={scrollContainerRef}
         className="relative w-full"
-        style={{ height: "1500vh" }}
+        style={{ height: "850vh" }}
       >
-        {/* Anclas de navegación interna sincronizadas con las 3 fases */}
+        {/* Anclas de navegación interna calibradas para mostrar exactamente las cartas activas */}
         <div id="inicio" className="absolute top-0 pointer-events-none" />
-        <div id="proyectos" className="absolute top-[30%] pointer-events-none" />
-        <div id="sobre-mi" className="absolute top-[61%] pointer-events-none" />
+        <div id="proyectos" className="absolute top-[54%] pointer-events-none" />
+        <div id="sobre-mi" className="absolute top-[93%] pointer-events-none" />
 
         {/* Sticky Pinned Viewport: 100% fijado en pantalla a lo largo de toda la experiencia */}
         <div
@@ -158,7 +158,7 @@ export default function Home() {
       </section>
 
       {/* 3. Pie de página minimalista técnico */}
-      <footer className="relative z-20 w-full max-w-7xl mx-auto px-6 sm:px-10 lg:px-16 py-8 border-t border-white/[0.08] flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono font-light text-zinc-500 bg-black">
+      <footer id="contacto" className="relative z-20 w-full max-w-7xl mx-auto px-6 sm:px-10 lg:px-16 py-8 border-t border-white/[0.08] flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono font-light text-zinc-500 bg-black">
         <div className="flex items-center gap-3">
           <span>PORTAFOLIO.TXT</span>
           <span>•</span>
@@ -167,10 +167,46 @@ export default function Home() {
           <span>2026</span>
         </div>
         <div className="flex items-center gap-5 text-zinc-400">
-          <a href="#inicio" className="hover:text-white transition-colors">Inicio</a>
-          <a href="#proyectos" className="hover:text-white transition-colors">Proyectos</a>
-          <a href="#sobre-mi" className="hover:text-white transition-colors">Sobre mí</a>
-          <a href="#contacto" className="hover:text-white transition-colors">Contáctame</a>
+          <a
+            href="#inicio"
+            onClick={(e) => {
+              e.preventDefault();
+              document.getElementById("inicio")?.scrollIntoView({ behavior: "smooth" });
+            }}
+            className="hover:text-white transition-colors cursor-pointer"
+          >
+            Inicio
+          </a>
+          <a
+            href="#proyectos"
+            onClick={(e) => {
+              e.preventDefault();
+              document.getElementById("proyectos")?.scrollIntoView({ behavior: "smooth" });
+            }}
+            className="hover:text-white transition-colors cursor-pointer"
+          >
+            Proyectos
+          </a>
+          <a
+            href="#sobre-mi"
+            onClick={(e) => {
+              e.preventDefault();
+              document.getElementById("sobre-mi")?.scrollIntoView({ behavior: "smooth" });
+            }}
+            className="hover:text-white transition-colors cursor-pointer"
+          >
+            Sobre mí
+          </a>
+          <a
+            href="#contacto"
+            onClick={(e) => {
+              e.preventDefault();
+              document.getElementById("contacto")?.scrollIntoView({ behavior: "smooth" });
+            }}
+            className="hover:text-white transition-colors cursor-pointer"
+          >
+            Contáctame
+          </a>
         </div>
       </footer>
 

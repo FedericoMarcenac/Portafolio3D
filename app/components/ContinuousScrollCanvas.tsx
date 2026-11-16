@@ -470,7 +470,7 @@ export default function ContinuousScrollCanvas({
         if (Math.abs(diff) < 0.001) {
           current = target;
         } else {
-          current += diff * 0.088;
+          current += diff * 0.12;
         }
       }
 
