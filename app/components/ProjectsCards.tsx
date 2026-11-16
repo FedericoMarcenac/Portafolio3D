@@ -17,134 +17,128 @@ interface Project {
   side: "left" | "right";
 }
 
-const PROJECTS: Project[] = [
+const getBasePath = (): string => {
+  if (typeof window !== "undefined") {
+    const segments = window.location.pathname.split("/").filter(Boolean);
+    if (segments.length > 0 && segments[0].toLowerCase() === "portafolio3d") {
+      return `/${segments[0]}`;
+    }
+  }
+  return process.env.NEXT_PUBLIC_BASE_PATH || (process.env.NODE_ENV === "production" ? "/Portafolio3D" : "");
+};
+
+const getProjects = (basePath: string): Project[] => [
   {
     id: "proj-1",
     number: "01",
-    title: "Aether AI",
-    subtitle: "Estudio de Difusión Neural",
+    title: "Primer Portafolio Web",
+    subtitle: "Mi Primer Portafolio Personal // v1",
     description:
-      "Plataforma de generación y síntesis visual en sub-segundos con control preciso de iluminación, composición y cámara mediante modelos generativos.",
-    technologies: ["React", "TypeScript", "Node.js", "Python"],
+      "Mi primer sitio web de presentación personal desarrollado en los inicios de mi trayectoria. Cuenta con maquetación semántica estructurada, diseño adaptativo y exposición de mis primeros trabajos y metas.",
+    technologies: ["HTML5", "CSS3", "JavaScript", "GitHub Pages"],
     accentColor: "#06b6d4", // Cyan
     originClass: "origin-bottom-right",
     side: "left",
-    mainImage:
-      "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80",
+    mainImage: `${basePath}/projects/fedepagina.png`,
     gallery: [
       {
-        title: "Canvas Principal",
-        image:
-          "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80",
+        title: "Página Principal",
+        image: `${basePath}/projects/fedepagina.png`,
       },
       {
-        title: "Editor de Nodos",
-        image:
-          "https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?auto=format&fit=crop&w=800&q=80",
+        title: "Estructura Web",
+        image: "https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?auto=format&fit=crop&w=800&q=80",
       },
       {
-        title: "Inferencia & Métricas",
-        image:
-          "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80",
+        title: "Diseño Responsivo",
+        image: "https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?auto=format&fit=crop&w=800&q=80",
       },
     ],
-    liveUrl: "https://github.com",
+    liveUrl: "https://federicomarcenac.github.io/fedePagina/index.html",
   },
   {
     id: "proj-2",
     number: "02",
-    title: "Krypton Terminal",
-    subtitle: "Trading & Mercados Financieros",
+    title: "Sitio Web Ettonazzem",
+    subtitle: "Portal Comercial & Catálogo // Negocio Familiar",
     description:
-      "Terminal cuantitativo en tiempo real, monitoreo de libros de órdenes y ejecución de transacciones financieras de alta frecuencia.",
-    technologies: ["TypeScript", "React", "PostgreSQL", "Docker"],
+      "Desarrollo web comercial para el negocio familiar de cerrajería integral del automotor y venta de repuestos. Incluye catálogo organizado de productos, secciones informativas de servicios y contacto directo.",
+    technologies: ["HTML5", "CSS3", "JavaScript", "Bootstrap"],
     accentColor: "#10b981", // Emerald
     originClass: "origin-bottom-left",
     side: "right",
-    mainImage:
-      "https://images.unsplash.com/photo-1642543492481-44e81e3914a7?auto=format&fit=crop&w=800&q=80",
+    mainImage: `${basePath}/projects/ettonazzem.png`,
     gallery: [
       {
-        title: "Gráficos en Vivo",
-        image:
-          "https://images.unsplash.com/photo-1642543492481-44e81e3914a7?auto=format&fit=crop&w=800&q=80",
+        title: "Portada Comercial",
+        image: `${basePath}/projects/ettonazzem.png`,
       },
       {
-        title: "Order Book & Depth",
-        image:
-          "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=800&q=80",
+        title: "Catálogo de Productos",
+        image: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=800&q=80",
       },
       {
-        title: "Gestión de Portafolio",
-        image:
-          "https://images.unsplash.com/photo-1559526324-4b87b5e36e44?auto=format&fit=crop&w=800&q=80",
+        title: "Taller & Servicios",
+        image: "https://images.unsplash.com/photo-1504917599217-d4dc5ebe6122?auto=format&fit=crop&w=800&q=80",
       },
     ],
-    liveUrl: "https://github.com",
+    liveUrl: "https://federicomarcenac.github.io/paginaEttonazzem/index.html",
   },
   {
     id: "proj-3",
     number: "03",
-    title: "Nova 3D Space",
-    subtitle: "Showroom & E-Commerce Espacial",
+    title: "Portafolio Federico Marcenac",
+    subtitle: "Portafolio Personal Interactivo",
     description:
-      "Experiencia inmersiva con renderizado 3D interactivo en tiempo real, shaders WebGL y configurador dinámico de materiales PBR.",
-    technologies: ["Three.js", "React", "JavaScript", "SQLite"],
+      "Portafolio interactivo enfocado en diseño moderno, animaciones fluidas, arquitectura modular de secciones para proyectos y experiencia de usuario depurada con soporte multidispositivo.",
+    technologies: ["React", "JavaScript", "CSS Modules", "GitHub Pages"],
     accentColor: "#8b5cf6", // Purple
     originClass: "origin-top-right",
     side: "left",
-    mainImage:
-      "https://images.unsplash.com/photo-1633493106115-6202479f64bf?auto=format&fit=crop&w=800&q=80",
+    mainImage: `${basePath}/projects/portafolio-marcenac.png`,
     gallery: [
       {
-        title: "Visor 3D Interactivo",
-        image:
-          "https://images.unsplash.com/photo-1633493106115-6202479f64bf?auto=format&fit=crop&w=800&q=80",
+        title: "Vista General",
+        image: `${basePath}/projects/portafolio-marcenac.png`,
       },
       {
-        title: "Configurador PBR",
-        image:
-          "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80",
+        title: "Módulos & Proyectos",
+        image: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=800&q=80",
       },
       {
-        title: "Checkout Seguro",
-        image:
-          "https://images.unsplash.com/photo-1556742049-0a67c5574f73?auto=format&fit=crop&w=800&q=80",
+        title: "Diseño & UI/UX",
+        image: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=800&q=80",
       },
     ],
-    liveUrl: "https://github.com",
+    liveUrl: "https://federicomarcenac.github.io/PortafolioFedericoMarcenac/",
   },
   {
     id: "proj-4",
     number: "04",
-    title: "Vortex Cloud",
-    subtitle: "Orquestador de Infraestructura",
+    title: "Studio Vanguard Arq",
+    subtitle: "Estudio de Arquitectura & Diseño Espacial",
     description:
-      "Panel de control para microservicios distribuidos, trazabilidad de logs en streaming y escalado autónomo de clústeres nativos en la nube.",
-    technologies: ["Python", "Docker", "Git", "Playwright"],
+      "Plataforma conceptual de alta gama para estudio de arquitectura contemporánea. Galería inmersiva de proyectos residenciales, renders 3D minimalistas, visualización de planos y tipografía editorial elegante.",
+    technologies: ["React", "Next.js", "Tailwind CSS", "Three.js"],
     accentColor: "#f59e0b", // Amber
     originClass: "origin-top-left",
     side: "right",
-    mainImage:
-      "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=800&q=80",
+    mainImage: `${basePath}/projects/arquitectura.jpg`,
     gallery: [
       {
-        title: "Topología de Nodos",
-        image:
-          "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=800&q=80",
+        title: "Render Residencial",
+        image: `${basePath}/projects/arquitectura.jpg`,
       },
       {
-        title: "Streaming de Logs",
-        image:
-          "https://images.unsplash.com/photo-1504639725590-34d0984388bd?auto=format&fit=crop&w=800&q=80",
+        title: "Planos & Concepto",
+        image: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=800&q=80",
       },
       {
-        title: "Telemetría en Vivo",
-        image:
-          "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=800&q=80",
+        title: "Espacios & Materiales",
+        image: "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=800&q=80",
       },
     ],
-    liveUrl: "https://github.com",
+    liveUrl: "https://github.com/FedericoMarcenac",
   },
 ];
 
@@ -161,9 +155,12 @@ export default function ProjectsCards({ currentFrame }: ProjectsCardsProps) {
     "proj-4": 0,
   });
 
-  // Aparecen progresivamente en los frames de medio (entre frame 190 y 240)
-  const START_FRAME = 190;
-  const SETTLE_FRAME = 240;
+  const basePath = getBasePath();
+  const projects = getProjects(basePath);
+
+  // Aparecen progresivamente en los frames de medio (entre frame 140 y 289)
+  const START_FRAME = 145;
+  const SETTLE_FRAME = 210;
 
   if (currentFrame < START_FRAME) {
     return null;
@@ -173,9 +170,9 @@ export default function ProjectsCards({ currentFrame }: ProjectsCardsProps) {
   const rawProgress = Math.max(0, Math.min(1, (currentFrame - START_FRAME) / (SETTLE_FRAME - START_FRAME)));
   const progress = Math.sin((rawProgress * Math.PI) / 2);
 
-  // Desvanecimiento suave al salir hacia la Fase 3 (FramesGato / sobreMi.txt)
-  const FADE_OUT_START = 289;
-  const FADE_OUT_END = 305;
+  // Desvanecimiento suave al salir hacia la Fase 3
+  const FADE_OUT_START = 275;
+  const FADE_OUT_END = 295;
 
   let opacity = progress;
   if (currentFrame > FADE_OUT_START) {
@@ -268,10 +265,11 @@ export default function ProjectsCards({ currentFrame }: ProjectsCardsProps) {
 
       {/* ========================================================
           4 CUADRANTES DE PANTALLA COMPLETA (2 columnas x 2 filas)
-          Cartas ampliadas en tamaño para máxima presencia y legibilidad
+          Visual de alta calidad: bordes nítidos, filtros de contraste,
+          chips elegantes y proporciones ampliadas
          ======================================================== */}
       <div className="grid grid-cols-1 sm:grid-cols-2 grid-rows-none sm:grid-rows-2 w-full h-full max-w-[1580px] gap-6 sm:gap-x-12 sm:gap-y-6 lg:gap-x-16 lg:gap-y-8 items-center justify-items-center">
-        {PROJECTS.map((proj) => {
+        {projects.map((proj) => {
           const isSelected = selectedId === proj.id;
           const isOtherSelected = selectedId !== null && !isSelected;
           const currentImgIndex = activeImageIndexes[proj.id] || 0;
@@ -291,25 +289,25 @@ export default function ProjectsCards({ currentFrame }: ProjectsCardsProps) {
                 transform: `translate3d(${lateralOffset}px, 0, 0)`,
                 willChange: "transform, opacity",
               }}
-              className="relative w-full flex items-center justify-center"
+              className="relative w-full flex items-center justify-center group"
             >
-              {/* Carta Expandible por Click (Agrandada) */}
+              {/* Carta Expandible por Click */}
               <div
                 onClick={() => toggleSelectCard(proj.id)}
-                className={`relative w-full max-w-[460px] sm:max-w-[530px] lg:max-w-[580px] transition-all duration-300 ease-out cursor-pointer ${proj.originClass} ${
+                className={`relative w-full max-w-[480px] sm:max-w-[540px] lg:max-w-[600px] transition-all duration-300 ease-out cursor-pointer ${proj.originClass} ${
                   isSelected
                     ? "z-50 scale-[1.05] sm:scale-[1.08] shadow-[0_35px_80px_rgba(0,0,0,0.98)]"
                     : isOtherSelected
                     ? "z-10 opacity-30 scale-[0.98] blur-[0.3px]"
-                    : "z-10 opacity-100 scale-100 hover:scale-[1.015]"
+                    : "z-10 opacity-100 scale-100 hover:scale-[1.02]"
                 }`}
               >
-                {/* Contenedor Abierto y Proporcionado */}
+                {/* Contenedor con efecto cristal templado y sombra de profundidad */}
                 <div
-                  className={`relative rounded-2xl overflow-hidden backdrop-blur-xl transition-all duration-300 p-4 sm:p-5 lg:p-6 flex flex-col gap-3.5 ${
+                  className={`relative rounded-2xl overflow-hidden backdrop-blur-md transition-all duration-300 p-4 sm:p-5 lg:p-6 flex flex-col gap-3.5 ${
                     isSelected
-                      ? "bg-black/92 border border-white/35 shadow-[0_18px_50px_rgba(0,0,0,0.98)]"
-                      : "bg-black/50 border border-white/[0.1] hover:border-white/25 shadow-[0_10px_35px_rgba(0,0,0,0.7)]"
+                      ? "bg-black/92 border border-white/35 shadow-[0_20px_60px_rgba(0,0,0,0.98)]"
+                      : "bg-black/45 border border-white/15 hover:border-white/30 shadow-[0_12px_40px_rgba(0,0,0,0.65)] hover:shadow-[0_16px_50px_rgba(0,0,0,0.85)]"
                   }`}
                 >
                   {/* Cabecera abierta técnica */}
@@ -318,16 +316,18 @@ export default function ProjectsCards({ currentFrame }: ProjectsCardsProps) {
                       <span
                         className="w-2.5 h-2.5 rounded-full transition-all duration-300"
                         style={{
-                          backgroundColor: isSelected ? proj.accentColor : "rgba(255,255,255,0.35)",
-                          boxShadow: isSelected ? `0 0 10px ${proj.accentColor}` : "none",
+                          backgroundColor: isSelected ? proj.accentColor : proj.accentColor,
+                          boxShadow: `0 0 10px ${proj.accentColor}`,
                         }}
                       />
-                      <span className="tracking-widest uppercase font-medium">PROYECTO // {proj.number}</span>
+                      <span className="tracking-widest uppercase font-semibold text-zinc-200">
+                        PROYECTO // {proj.number}
+                      </span>
                     </div>
 
                     <div className="flex items-center gap-2">
-                      <span className="text-[9px] sm:text-[10px] text-zinc-500 uppercase tracking-wider font-mono">
-                        {isSelected ? "[CLICK CERRAR]" : "[CLICK VER]"}
+                      <span className="text-[9px] sm:text-[10px] text-zinc-400 uppercase tracking-wider font-mono">
+                        {isSelected ? "[CLICK CERRAR]" : "[CLICK VER DETALLES]"}
                       </span>
                       {isSelected && (
                         <button
@@ -335,7 +335,7 @@ export default function ProjectsCards({ currentFrame }: ProjectsCardsProps) {
                             e.stopPropagation();
                             setSelectedId(null);
                           }}
-                          className="w-4.5 h-4.5 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center text-xs leading-none transition-colors"
+                          className="w-5 h-5 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center text-xs leading-none transition-colors"
                           title="Cerrar"
                         >
                           ✕
@@ -344,26 +344,31 @@ export default function ProjectsCards({ currentFrame }: ProjectsCardsProps) {
                     </div>
                   </div>
 
-                  {/* Imagen Principal (+ tamaño ampliado, h-48 a h-56) */}
-                  <div className="relative w-full h-48 sm:h-54 lg:h-56 rounded-xl overflow-hidden bg-zinc-950">
+                  {/* Imagen Principal en Alta Definición (+ contraste y nitidez) */}
+                  <div className="relative w-full h-52 sm:h-58 lg:h-64 rounded-xl overflow-hidden bg-zinc-950 border border-white/15 shadow-inner group-hover:border-white/30 transition-colors">
                     <img
                       src={activeImage}
                       alt={proj.title}
-                      className="w-full h-full object-cover transition-transform duration-500"
+                      className="w-full h-full object-cover object-top filter contrast-[1.03] brightness-[1.01] transition-transform duration-700 group-hover:scale-105"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent pointer-events-none" />
+                    
+                    {/* Borde interior sutil */}
+                    <div className="absolute inset-0 rounded-xl ring-1 ring-inset ring-white/10 pointer-events-none" />
+
+                    {/* Degradado cinematográfico para máxima legibilidad */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/92 via-black/35 to-transparent pointer-events-none" />
 
                     {/* Título integrado sobre el degradado inferior */}
                     <div className="absolute bottom-3 left-4 right-4 flex items-end justify-between">
                       <div>
-                        <h3 className="font-mono text-base sm:text-lg font-semibold tracking-wide text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)]">
+                        <h3 className="font-mono text-base sm:text-lg lg:text-xl font-bold tracking-wide text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.98)]">
                           {proj.title}
                         </h3>
-                        <p className="font-mono text-xs sm:text-[13px] text-zinc-300 font-light tracking-wide drop-shadow-[0_2px_5px_rgba(0,0,0,0.9)] line-clamp-1">
+                        <p className="font-mono text-xs sm:text-[13px] text-zinc-300 font-light tracking-wide drop-shadow-[0_2px_6px_rgba(0,0,0,0.95)] line-clamp-1 mt-0.5">
                           {proj.subtitle}
                         </p>
                       </div>
-                      <span className="text-sm text-white/70 font-mono">
+                      <span className="text-sm font-mono px-2 py-0.5 rounded bg-black/60 backdrop-blur-sm text-white/90 border border-white/20">
                         {isSelected ? "−" : "+"}
                       </span>
                     </div>
@@ -371,33 +376,33 @@ export default function ProjectsCards({ currentFrame }: ProjectsCardsProps) {
 
                   {/* Contenido desplegable POR CLICK */}
                   <div
-                    className={`transition-all duration-300 overflow-hidden flex flex-col gap-3 ${
+                    className={`transition-all duration-300 overflow-hidden flex flex-col gap-3.5 ${
                       isSelected
-                        ? "max-h-[360px] opacity-100 pt-1.5"
+                        ? "max-h-[380px] opacity-100 pt-1.5"
                         : "max-h-0 opacity-0 pt-0"
                     }`}
                   >
                     {/* Galería de vistas */}
                     <div className="flex flex-col gap-1.5">
                       <span className="font-mono text-[9px] sm:text-[10px] uppercase tracking-widest text-zinc-400">
-                        Vistas secundarias:
+                        Vistas y capturas secundarias:
                       </span>
                       <div className="grid grid-cols-3 gap-2">
                         {proj.gallery.map((item, idx) => (
                           <button
                             key={idx}
                             onClick={(e) => handleSelectImage(proj.id, idx, e)}
-                            className={`relative h-12 rounded-lg overflow-hidden border transition-all ${
+                            className={`relative h-13 rounded-lg overflow-hidden border transition-all ${
                               currentImgIndex === idx
-                                ? "border-white ring-1 ring-white/60 scale-102"
-                                : "border-white/15 opacity-60 hover:opacity-100"
+                                ? "border-white ring-2 ring-white/60 scale-102"
+                                : "border-white/15 opacity-65 hover:opacity-100 hover:border-white/35"
                             }`}
                             title={item.title}
                           >
                             <img
                               src={item.image}
                               alt={item.title}
-                              className="w-full h-full object-cover"
+                              className="w-full h-full object-cover filter contrast-[1.02]"
                             />
                           </button>
                         ))}
@@ -405,7 +410,7 @@ export default function ProjectsCards({ currentFrame }: ProjectsCardsProps) {
                     </div>
 
                     {/* Descripción técnica */}
-                    <p className="text-xs sm:text-[13px] font-light text-zinc-300 leading-relaxed font-sans line-clamp-2">
+                    <p className="text-xs sm:text-[13px] font-light text-zinc-300 leading-relaxed font-sans line-clamp-3">
                       {proj.description}
                     </p>
 
@@ -414,7 +419,7 @@ export default function ProjectsCards({ currentFrame }: ProjectsCardsProps) {
                       {proj.technologies.map((tech) => (
                         <span
                           key={tech}
-                          className="px-2.5 py-1 rounded-full bg-white/[0.08] border border-white/15 font-mono text-[10px] sm:text-[11px] text-zinc-200"
+                          className="px-2.5 py-1 rounded-md bg-white/[0.08] hover:bg-white/[0.14] border border-white/12 font-mono text-[10px] sm:text-[11px] text-zinc-100 transition-colors"
                         >
                           {tech}
                         </span>
@@ -426,7 +431,7 @@ export default function ProjectsCards({ currentFrame }: ProjectsCardsProps) {
                       href={proj.liveUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="w-full py-2.5 px-4 rounded-xl bg-white text-black font-mono text-xs sm:text-sm font-semibold tracking-wider text-center flex items-center justify-center gap-1.5 hover:bg-zinc-200 transition-colors shadow-[0_4px_14px_rgba(255,255,255,0.2)] mt-1"
+                      className="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-white to-zinc-200 text-black font-mono text-xs sm:text-sm font-bold tracking-wider text-center flex items-center justify-center gap-2 hover:bg-zinc-200 transition-all shadow-[0_4px_18px_rgba(255,255,255,0.25)] hover:shadow-[0_6px_25px_rgba(255,255,255,0.4)] mt-1"
                       onClick={(e) => e.stopPropagation()}
                     >
                       <span>VISITAR PROYECTO</span>

@@ -2,30 +2,28 @@
 
 import React, { useEffect, useRef } from "react";
 
-// Sequence 1: Frames (1 to 140) - Se redujeron los últimos 10 frames según lo solicitado
+// Sequence 1: Frames (1 to 140)
 const SEQ1_COUNT = 140;
 
-// Sequence 2: FramesMedios (continues from frame 002 to 150, skipping 001 to avoid duplication)
+// Sequence 2: FramesMedios (2 to 150)
 const SEQ2_START_FRAME = 2;
 const SEQ2_END_FRAME = 150;
 const SEQ2_COUNT = SEQ2_END_FRAME - SEQ2_START_FRAME + 1; // 149 frames
 
-// Sequence 3: FramesGato (continues from frame 002 to 119, skipping 001 to avoid duplication)
+// Sequence 3: FramesGato (2 to 119)
 const SEQ3_START_FRAME = 2;
 const SEQ3_END_FRAME = 119;
 const SEQ3_COUNT = SEQ3_END_FRAME - SEQ3_START_FRAME + 1; // 118 frames
 
-// Repetición al final de FramesGato: frames 89 a 119 repetidos 2 veces
-const SEQ3_LOOP_START = 89;
-const SEQ3_LOOP_END = 119;
-const SEQ3_LOOP_COUNT = SEQ3_LOOP_END - SEQ3_LOOP_START + 1; // 31 frames (89 a 119)
-const SEQ3_TOTAL_LOOPS = 2; // repetidos 2 veces
-const SEQ3_REPEAT_FRAMES = SEQ3_LOOP_COUNT * SEQ3_TOTAL_LOOPS; // 62 frames
+// Sequence 4: FramesSalto (1 to 150) - Secuencia cinemática de salto hacia contacto
+const SEQ4_START_FRAME = 1;
+const SEQ4_END_FRAME = 150;
+const SEQ4_COUNT = SEQ4_END_FRAME - SEQ4_START_FRAME + 1; // 150 frames
 
-// Total continuous steps: 150 + 149 + 118 + 62 = 479 frames
-const TOTAL_CONTINUOUS_FRAMES = SEQ1_COUNT + SEQ2_COUNT + SEQ3_COUNT + SEQ3_REPEAT_FRAMES;
+// Total continuo de frames: 140 + 149 + 118 + 150 = 557 frames
+const TOTAL_CONTINUOUS_FRAMES = SEQ1_COUNT + SEQ2_COUNT + SEQ3_COUNT + SEQ4_COUNT;
 
-// Detección dinámica y robusta de Base Path para GitHub Pages (/Portafolio3D) y localhost ("")
+// Detección dinámica de Base Path para GitHub Pages (/Portafolio3D) y localhost ("")
 const getBasePath = (): string => {
   if (typeof window !== "undefined") {
     const segments = window.location.pathname.split("/").filter(Boolean);
@@ -36,10 +34,10 @@ const getBasePath = (): string => {
   return process.env.NEXT_PUBLIC_BASE_PATH || (process.env.NODE_ENV === "production" ? "/Portafolio3D" : "");
 };
 
-// Helper to resolve the image source for any continuous index (1 to 479)
-const getFrameData = (
+// Resuelve la URL y datos de secuencia para cualquier índice global (1 a 557)
+export const getFrameData = (
   globalIndex: number
-): { url: string; sequence: 1 | 2 | 3; localIndex: number } => {
+): { url: string; sequence: 1 | 2 | 3 | 4; localIndex: number } => {
   const basePath = getBasePath();
   if (globalIndex <= SEQ1_COUNT) {
     const pad = String(globalIndex).padStart(3, "0");
@@ -67,15 +65,13 @@ const getFrameData = (
       localIndex: thirdFrameNumber,
     };
   } else {
-    // Repetición 2 veces de los frames 89 al 119
-    const repeatOffset = globalIndex - (SEQ1_COUNT + SEQ2_COUNT + SEQ3_COUNT) - 1; // 0, 1, 2...
-    const loopIndex = repeatOffset % SEQ3_LOOP_COUNT;
-    const thirdFrameNumber = Math.min(SEQ3_LOOP_END, SEQ3_LOOP_START + loopIndex);
-    const pad = String(thirdFrameNumber).padStart(3, "0");
+    const offset = globalIndex - (SEQ1_COUNT + SEQ2_COUNT + SEQ3_COUNT) - 1; // 0, 1, 2...
+    const fourthFrameNumber = Math.min(SEQ4_END_FRAME, SEQ4_START_FRAME + offset);
+    const pad = String(fourthFrameNumber).padStart(3, "0");
     return {
-      url: `${basePath}/FramesGato/frame_${pad}.jpg`,
-      sequence: 3,
-      localIndex: thirdFrameNumber,
+      url: `${basePath}/FramesSalto/frame_${pad}.jpg`,
+      sequence: 4,
+      localIndex: fourthFrameNumber,
     };
   }
 };
@@ -91,24 +87,28 @@ export default function ContinuousScrollCanvas({
 }: ContinuousScrollCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
-  // Cache for Sequence 1 (1 to 150)
+  // Cache para Secuencia 1 (Frames, 1 a 140)
   const imagesSeq1 = useRef<(HTMLImageElement | null)[]>(new Array(SEQ1_COUNT + 1).fill(null));
   const loadedSeq1 = useRef<Set<number>>(new Set());
 
-  // Cache for Sequence 2 (2 to 150)
+  // Cache para Secuencia 2 (FramesMedios, 2 a 150)
   const imagesSeq2 = useRef<(HTMLImageElement | null)[]>(new Array(SEQ2_END_FRAME + 1).fill(null));
   const loadedSeq2 = useRef<Set<number>>(new Set());
 
-  // Cache for Sequence 3 (2 to 119)
+  // Cache para Secuencia 3 (FramesGato, 2 a 119)
   const imagesSeq3 = useRef<(HTMLImageElement | null)[]>(new Array(SEQ3_END_FRAME + 1).fill(null));
   const loadedSeq3 = useRef<Set<number>>(new Set());
+
+  // Cache para Secuencia 4 (FramesSalto, 1 a 150)
+  const imagesSeq4 = useRef<(HTMLImageElement | null)[]>(new Array(SEQ4_END_FRAME + 1).fill(null));
+  const loadedSeq4 = useRef<Set<number>>(new Set());
 
   const currentFrameRef = useRef<number>(1);
   const targetFrameRef = useRef<number>(1);
   const lastDrawnGlobalRef = useRef<number>(-1);
   const rafIdRef = useRef<number | null>(null);
 
-  // Helper to retrieve the closest loaded image element for seamless fallback
+  // Obtiene la imagen cargada más cercana para evitar parpadeos o pantallas en negro
   const getImageForGlobalIndex = (globalIndex: number): HTMLImageElement | null => {
     const { sequence, localIndex } = getFrameData(globalIndex);
 
@@ -149,7 +149,7 @@ export default function ContinuousScrollCanvas({
         return imagesSeq1.current[SEQ1_COUNT];
       }
       return null;
-    } else {
+    } else if (sequence === 3) {
       if (loadedSeq3.current.has(localIndex)) {
         return imagesSeq3.current[localIndex];
       }
@@ -165,15 +165,34 @@ export default function ContinuousScrollCanvas({
         }
         return imagesSeq3.current[closest];
       }
-      // Fallback within sequence 2 to avoid flashes
       if (loadedSeq2.current.has(SEQ2_END_FRAME)) {
         return imagesSeq2.current[SEQ2_END_FRAME];
+      }
+      return null;
+    } else {
+      if (loadedSeq4.current.has(localIndex)) {
+        return imagesSeq4.current[localIndex];
+      }
+      if (loadedSeq4.current.size > 0) {
+        let closest = SEQ4_START_FRAME;
+        let minDiff = Infinity;
+        for (const idx of loadedSeq4.current) {
+          const diff = Math.abs(idx - localIndex);
+          if (diff < minDiff) {
+            minDiff = diff;
+            closest = idx;
+          }
+        }
+        return imagesSeq4.current[closest];
+      }
+      if (loadedSeq3.current.has(SEQ3_END_FRAME)) {
+        return imagesSeq3.current[SEQ3_END_FRAME];
       }
       return null;
     }
   };
 
-  // Draw frame on canvas with object-fit: cover math and DPR scaling
+  // Renderizado en canvas con DPR scaling y encuadre cover
   const drawFrame = (desiredGlobalFrame: number, forceRedraw = false) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -200,7 +219,6 @@ export default function ContinuousScrollCanvas({
     let offsetX: number;
     let offsetY: number;
 
-    // Full-bleed cover calculation
     if (canvasAspect > imgAspect) {
       drawWidth = canvasWidth;
       drawHeight = canvasWidth / imgAspect;
@@ -216,7 +234,7 @@ export default function ContinuousScrollCanvas({
     ctx.drawImage(img, offsetX, offsetY, drawWidth, drawHeight);
   };
 
-  // Resize canvas according to device pixel ratio
+  // Redimensionamiento
   const handleResize = () => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -237,11 +255,11 @@ export default function ContinuousScrollCanvas({
     drawFrame(target, true);
   };
 
-  // Preloading Pipeline for all 3 Sequences
+  // Pre-carga progresiva de las 4 secuencias
   useEffect(() => {
     let isCancelled = false;
 
-    // 1. High-priority: Load Frame 1 of Sequence 1 immediately for instant 0ms first render
+    // 1. Alta prioridad: Frame 1 de Secuencia 1 para render inicial instantáneo
     const firstImg = new Image();
     firstImg.src = getFrameData(1).url;
     firstImg.onload = () => {
@@ -251,8 +269,8 @@ export default function ContinuousScrollCanvas({
       drawFrame(1, true);
     };
 
-    // 2. Early load boundary frames for zero gap:
-    // Frame 150 of Seq 1
+    // 2. Carga prioritaria de puntos frontera clave:
+    // Frame 140 de Seq 1
     const endSeq1Img = new Image();
     endSeq1Img.src = getFrameData(SEQ1_COUNT).url;
     endSeq1Img.onload = () => {
@@ -261,7 +279,7 @@ export default function ContinuousScrollCanvas({
       loadedSeq1.current.add(SEQ1_COUNT);
     };
 
-    // Frame 2 of Seq 2 (exact continuation of seq 1)
+    // Frame 2 de Seq 2
     const startSeq2Img = new Image();
     startSeq2Img.src = getFrameData(SEQ1_COUNT + 1).url;
     startSeq2Img.onload = () => {
@@ -270,7 +288,7 @@ export default function ContinuousScrollCanvas({
       loadedSeq2.current.add(SEQ2_START_FRAME);
     };
 
-    // Frame 150 of Seq 2
+    // Frame 150 de Seq 2
     const endSeq2Img = new Image();
     endSeq2Img.src = getFrameData(SEQ1_COUNT + SEQ2_COUNT).url;
     endSeq2Img.onload = () => {
@@ -279,7 +297,7 @@ export default function ContinuousScrollCanvas({
       loadedSeq2.current.add(SEQ2_END_FRAME);
     };
 
-    // Frame 2 of Seq 3 (exact continuation of seq 2, skipping duplicate 1)
+    // Frame 2 de Seq 3 (FramesGato)
     const startSeq3Img = new Image();
     startSeq3Img.src = getFrameData(SEQ1_COUNT + SEQ2_COUNT + 1).url;
     startSeq3Img.onload = () => {
@@ -288,89 +306,122 @@ export default function ContinuousScrollCanvas({
       loadedSeq3.current.add(SEQ3_START_FRAME);
     };
 
-    // Frame 119 of Seq 3 (the final frozen frame)
+    // Frame 119 de Seq 3
     const endSeq3Img = new Image();
-    endSeq3Img.src = getFrameData(TOTAL_CONTINUOUS_FRAMES).url;
+    endSeq3Img.src = getFrameData(SEQ1_COUNT + SEQ2_COUNT + SEQ3_COUNT).url;
     endSeq3Img.onload = () => {
       if (isCancelled) return;
       imagesSeq3.current[SEQ3_END_FRAME] = endSeq3Img;
       loadedSeq3.current.add(SEQ3_END_FRAME);
     };
 
-    // 3. Progressive preloader queue for remaining frames
-    const keyframesSeq1: number[] = [];
-    const remainingSeq1: number[] = [];
-    for (let i = 2; i < SEQ1_COUNT; i++) {
-      if (i % 5 === 0) keyframesSeq1.push(i);
-      else remainingSeq1.push(i);
-    }
+    // Frame 1 de Seq 4 (FramesSalto)
+    const startSeq4Img = new Image();
+    startSeq4Img.src = getFrameData(SEQ1_COUNT + SEQ2_COUNT + SEQ3_COUNT + 1).url;
+    startSeq4Img.onload = () => {
+      if (isCancelled) return;
+      imagesSeq4.current[1] = startSeq4Img;
+      loadedSeq4.current.add(1);
+    };
 
-    const keyframesSeq2: number[] = [];
-    const remainingSeq2: number[] = [];
-    for (let i = SEQ2_START_FRAME + 1; i < SEQ2_END_FRAME; i++) {
-      if (i % 5 === 0) keyframesSeq2.push(i);
-      else remainingSeq2.push(i);
-    }
+    // Frame 88 de Seq 4 (Desaparición de Sobre Mí)
+    const f88Seq4Img = new Image();
+    f88Seq4Img.src = getFrameData(SEQ1_COUNT + SEQ2_COUNT + SEQ3_COUNT + 88).url;
+    f88Seq4Img.onload = () => {
+      if (isCancelled) return;
+      imagesSeq4.current[88] = f88Seq4Img;
+      loadedSeq4.current.add(88);
+    };
 
-    const keyframesSeq3: number[] = [];
-    const remainingSeq3: number[] = [];
-    for (let i = SEQ3_START_FRAME + 1; i < SEQ3_END_FRAME; i++) {
-      if (i % 4 === 0) keyframesSeq3.push(i);
-      else remainingSeq3.push(i);
-    }
+    // Frame 126 de Seq 4 (Aparición de Contacto)
+    const f126Seq4Img = new Image();
+    f126Seq4Img.src = getFrameData(SEQ1_COUNT + SEQ2_COUNT + SEQ3_COUNT + 126).url;
+    f126Seq4Img.onload = () => {
+      if (isCancelled) return;
+      imagesSeq4.current[126] = f126Seq4Img;
+      loadedSeq4.current.add(126);
+    };
 
-    const queue: { sequence: 1 | 2 | 3; localIndex: number; url: string }[] = [];
+    // Frame 150 de Seq 4 (Final de salto)
+    const endSeq4Img = new Image();
+    endSeq4Img.src = getFrameData(TOTAL_CONTINUOUS_FRAMES).url;
+    endSeq4Img.onload = () => {
+      if (isCancelled) return;
+      imagesSeq4.current[SEQ4_END_FRAME] = endSeq4Img;
+      loadedSeq4.current.add(SEQ4_END_FRAME);
+    };
+
+    // 3. Cola de pre-carga en segundo plano para las 4 secuencias
+    const queue: { sequence: 1 | 2 | 3 | 4; localIndex: number; url: string }[] = [];
     const basePath = getBasePath();
 
     // Keyframes
-    keyframesSeq1.forEach((idx) => {
+    for (let i = 2; i < SEQ1_COUNT; i += 4) {
       queue.push({
         sequence: 1,
-        localIndex: idx,
-        url: `${basePath}/Frames/frame_${String(idx).padStart(3, "0")}.jpg`,
+        localIndex: i,
+        url: `${basePath}/Frames/frame_${String(i).padStart(3, "0")}.jpg`,
       });
-    });
-
-    keyframesSeq2.forEach((idx) => {
+    }
+    for (let i = SEQ2_START_FRAME + 1; i < SEQ2_END_FRAME; i += 4) {
       queue.push({
         sequence: 2,
-        localIndex: idx,
-        url: `${basePath}/FramesMedios/frame_${String(idx).padStart(3, "0")}.jpg`,
+        localIndex: i,
+        url: `${basePath}/FramesMedios/frame_${String(i).padStart(3, "0")}.jpg`,
       });
-    });
-
-    keyframesSeq3.forEach((idx) => {
+    }
+    for (let i = SEQ3_START_FRAME + 1; i < SEQ3_END_FRAME; i += 4) {
       queue.push({
         sequence: 3,
-        localIndex: idx,
-        url: `${basePath}/FramesGato/frame_${String(idx).padStart(3, "0")}.jpg`,
+        localIndex: i,
+        url: `${basePath}/FramesGato/frame_${String(i).padStart(3, "0")}.jpg`,
       });
-    });
-
-    // In-between
-    remainingSeq1.forEach((idx) => {
+    }
+    for (let i = SEQ4_START_FRAME + 1; i < SEQ4_END_FRAME; i += 4) {
       queue.push({
-        sequence: 1,
-        localIndex: idx,
-        url: `${basePath}/Frames/frame_${String(idx).padStart(3, "0")}.jpg`,
+        sequence: 4,
+        localIndex: i,
+        url: `${basePath}/FramesSalto/frame_${String(i).padStart(3, "0")}.jpg`,
       });
-    });
+    }
 
-    remainingSeq2.forEach((idx) => {
-      queue.push({
-        sequence: 2,
-        localIndex: idx,
-        url: `${basePath}/FramesMedios/frame_${String(idx).padStart(3, "0")}.jpg`,
-      });
-    });
-
-    remainingSeq3.forEach((idx) => {
-      queue.push({
-        sequence: 3,
-        localIndex: idx,
-        url: `${basePath}/FramesGato/frame_${String(idx).padStart(3, "0")}.jpg`,
-      });
-    });
+    // Frames restantes
+    for (let i = 2; i < SEQ1_COUNT; i++) {
+      if (i % 4 !== 0) {
+        queue.push({
+          sequence: 1,
+          localIndex: i,
+          url: `${basePath}/Frames/frame_${String(i).padStart(3, "0")}.jpg`,
+        });
+      }
+    }
+    for (let i = SEQ2_START_FRAME + 1; i < SEQ2_END_FRAME; i++) {
+      if (i % 4 !== 0) {
+        queue.push({
+          sequence: 2,
+          localIndex: i,
+          url: `${basePath}/FramesMedios/frame_${String(i).padStart(3, "0")}.jpg`,
+        });
+      }
+    }
+    for (let i = SEQ3_START_FRAME + 1; i < SEQ3_END_FRAME; i++) {
+      if (i % 4 !== 0) {
+        queue.push({
+          sequence: 3,
+          localIndex: i,
+          url: `${basePath}/FramesGato/frame_${String(i).padStart(3, "0")}.jpg`,
+        });
+      }
+    }
+    for (let i = SEQ4_START_FRAME + 1; i < SEQ4_END_FRAME; i++) {
+      if (i % 4 !== 0) {
+        queue.push({
+          sequence: 4,
+          localIndex: i,
+          url: `${basePath}/FramesSalto/frame_${String(i).padStart(3, "0")}.jpg`,
+        });
+      }
+    }
 
     const MAX_CONCURRENT = 8;
     let activeDownloads = 0;
@@ -393,14 +444,16 @@ export default function ContinuousScrollCanvas({
           } else if (item.sequence === 2) {
             imagesSeq2.current[item.localIndex] = img;
             loadedSeq2.current.add(item.localIndex);
-          } else {
+          } else if (item.sequence === 3) {
             imagesSeq3.current[item.localIndex] = img;
             loadedSeq3.current.add(item.localIndex);
+          } else {
+            imagesSeq4.current[item.localIndex] = img;
+            loadedSeq4.current.add(item.localIndex);
           }
 
           activeDownloads--;
 
-          // Redraw if this frame is currently active
           const currentTarget = Math.round(currentFrameRef.current);
           const currentData = getFrameData(currentTarget);
           if (
@@ -452,8 +505,6 @@ export default function ContinuousScrollCanvas({
       const currentScroll = Math.max(0, -rect.top);
       const progress = Math.min(1, Math.max(0, currentScroll / scrollHeight));
 
-      // 0% -> global frame 1 (Frames/frame_001.jpg)
-      // 100% -> global frame 417 (FramesGato/frame_119.jpg, completely static)
       const target = 1 + progress * (TOTAL_CONTINUOUS_FRAMES - 1);
       targetFrameRef.current = Math.min(TOTAL_CONTINUOUS_FRAMES, Math.max(1, target));
     };
@@ -468,7 +519,7 @@ export default function ContinuousScrollCanvas({
     };
   }, [containerRef]);
 
-  // Persistent requestAnimationFrame loop for ultra-smooth continuous lerp
+  // Persistent requestAnimationFrame loop para LERP continuo ultra suave
   useEffect(() => {
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 

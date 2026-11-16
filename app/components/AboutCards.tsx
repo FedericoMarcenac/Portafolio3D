@@ -13,13 +13,14 @@ interface TechBadge {
 
 const FRONTEND_TECHS: TechBadge[] = [
   { name: "React", logo: "https://cdn.simpleicons.org/react/61DAFB" },
-  { name: "Next.js", logo: "https://cdn.simpleicons.org/nextdotjs/white" },
   { name: "TypeScript", logo: "https://cdn.simpleicons.org/typescript/3178C6" },
+  { name: "JavaScript", logo: "https://cdn.simpleicons.org/javascript/F7DF1E" },
+  { name: "Next.js", logo: "https://cdn.simpleicons.org/nextdotjs/white" },
+  { name: "HTML5", logo: "https://cdn.simpleicons.org/html5/E34F26" },
+  { name: "CSS3", logo: "https://cdn.simpleicons.org/css/1572B6" },
+  { name: "Sass/SCSS", logo: "https://cdn.simpleicons.org/sass/CC6699" },
+  { name: "Bootstrap", logo: "https://cdn.simpleicons.org/bootstrap/7952B3" },
   { name: "Three.js", logo: "https://cdn.simpleicons.org/threedotjs/white" },
-  { name: "WebGL", logo: "https://cdn.simpleicons.org/webgl/990000" },
-  { name: "Tailwind CSS", logo: "https://cdn.simpleicons.org/tailwindcss/06B6D4" },
-  { name: "GSAP", logo: "https://cdn.simpleicons.org/greensock/88CE02" },
-  { name: "HTML5 Canvas", logo: "https://cdn.simpleicons.org/html5/E34F26" },
 ];
 
 const BACKEND_TECHS: TechBadge[] = [
@@ -27,27 +28,22 @@ const BACKEND_TECHS: TechBadge[] = [
   { name: "Express", logo: "https://cdn.simpleicons.org/express/white" },
   { name: "Python", logo: "https://cdn.simpleicons.org/python/3776AB" },
   { name: "REST APIs", logo: "https://cdn.simpleicons.org/postman/FF6C37" },
-  { name: "GraphQL", logo: "https://cdn.simpleicons.org/graphql/E10098" },
-  { name: "Microservicios", logo: "https://cdn.simpleicons.org/kubernetes/326CE5" },
-  { name: "Auth & JWT", logo: "https://cdn.simpleicons.org/jsonwebtokens/white" },
 ];
 
 const DATABASE_TECHS: TechBadge[] = [
+  { name: "SQL", logo: "https://cdn.simpleicons.org/mysql/4479A1" },
   { name: "PostgreSQL", logo: "https://cdn.simpleicons.org/postgresql/4169E1" },
-  { name: "MongoDB", logo: "https://cdn.simpleicons.org/mongodb/47A248" },
-  { name: "Redis", logo: "https://cdn.simpleicons.org/redis/FF4438" },
   { name: "SQLite", logo: "https://cdn.simpleicons.org/sqlite/003B57" },
   { name: "Prisma ORM", logo: "https://cdn.simpleicons.org/prisma/white" },
 ];
 
-const DEVOPS_TECHS: TechBadge[] = [
-  { name: "Docker", logo: "https://cdn.simpleicons.org/docker/2496ED" },
+const SUPPORT_DEVOPS_TECHS: TechBadge[] = [
+  { name: "Soporte IT / Hardware", logo: "https://cdn.simpleicons.org/windows/0078D4" },
+  { name: "Redes & Wi-Fi", logo: "https://cdn.simpleicons.org/cisco/1BA0D7" },
+  { name: "Excel (Avanzado)", logo: "https://cdn.simpleicons.org/microsoftexcel/217346" },
   { name: "Git", logo: "https://cdn.simpleicons.org/git/F05032" },
-  { name: "GitHub Actions", logo: "https://cdn.simpleicons.org/githubactions/2088FF" },
-  { name: "Vercel", logo: "https://cdn.simpleicons.org/vercel/white" },
-  { name: "AWS Cloud", logo: "https://cdn.simpleicons.org/amazonwebservices/FF9900" },
-  { name: "Linux", logo: "https://cdn.simpleicons.org/linux/FCC624" },
-  { name: "Figma", logo: "https://cdn.simpleicons.org/figma/F24E1E" },
+  { name: "GitHub", logo: "https://cdn.simpleicons.org/github/white" },
+  { name: "Docker", logo: "https://cdn.simpleicons.org/docker/2496ED" },
 ];
 
 const getBasePath = (): string => {
@@ -61,228 +57,219 @@ const getBasePath = (): string => {
 };
 
 export default function AboutCards({ currentFrame }: AboutCardsProps) {
-  // Comienza a aparecer en la fase 3 (a partir de frame 320) y se asienta suavemente
-  const START_FRAME = 320;
-  const SETTLE_FRAME = 395;
-
-  if (currentFrame < START_FRAME) {
-    return null;
+  // Visibilidad exacta según especificación:
+  // - Frames < 310: Invisible (proyectos activos)
+  // - Frames 310–360: Entrada cinematográfica en Fase 3 (FramesGato)
+  // - Frames 360–486: Completamente visible y activo (incluye el inicio de FramesSalto)
+  // - Frames 486–495: Desvanecimiento suave para desaparecer exactamente en frame_088 de FramesSalto (global 495)
+  // - Frames >= 495: Completamente invisible (salto libre y limpio)
+  let opacity = 0;
+  if (currentFrame < 310) {
+    opacity = 0;
+  } else if (currentFrame >= 310 && currentFrame < 360) {
+    const p = (currentFrame - 310) / (360 - 310);
+    opacity = Math.sin((p * Math.PI) / 2);
+  } else if (currentFrame >= 360 && currentFrame <= 486) {
+    opacity = 1.0;
+  } else if (currentFrame > 486 && currentFrame <= 495) {
+    const p = (currentFrame - 486) / (495 - 486);
+    opacity = Math.max(0, 1 - Math.sin((p * Math.PI) / 2));
+  } else {
+    opacity = 0;
   }
-
-  // Progreso suave de entrada (0 a 1)
-  const rawProgress = Math.max(0, Math.min(1, (currentFrame - START_FRAME) / (SETTLE_FRAME - START_FRAME)));
-  const progress = 1 - Math.pow(1 - rawProgress, 3);
-  const opacity = Math.min(1, Math.max(0, progress * 1.15));
-
-  // Desplazamiento desde el eje X positivo (desde la derecha hacia el centro)
-  const baseOffset = (1 - progress) * 220; // en píxeles
 
   return (
     <div
-      className="w-full max-w-6xl lg:max-w-7xl mx-auto flex flex-col gap-5 sm:gap-6 pointer-events-auto select-none transition-all duration-300"
+      className="w-full max-w-7xl xl:max-w-[1420px] mx-auto flex flex-col md:flex-row gap-5 lg:gap-6 items-stretch select-none transition-opacity duration-200"
       style={{
         opacity: opacity,
-        pointerEvents: opacity > 0.4 ? "auto" : "none",
+        pointerEvents: opacity > 0.1 ? "auto" : "none",
+        visibility: opacity > 0 ? "visible" : "hidden",
       }}
     >
-      {/* =========================================================================
-          BLOQUE 1: FORMACIÓN ACADÉMICA (Transparente con un toque sutil de opacidad)
-         ========================================================================= */}
+      {/* =======================================================================
+          COLUMNA IZQUIERDA: CARTA DE PERFIL CON FOTO
+          Agrandada ~20%, más transparente (base glassmorphic) y foto adaptada 3:4
+         ======================================================================= */}
       <div
-        style={{
-          transform: `translate3d(${baseOffset}px, 0, 0)`,
-          willChange: "transform, opacity",
-        }}
-        className="w-full rounded-2xl bg-black/28 backdrop-blur-sm border border-white/[0.12] hover:border-violet-400/35 p-4 sm:p-6 transition-all duration-300 shadow-[0_10px_35px_rgba(0,0,0,0.6)]"
+        className="w-full md:w-[360px] lg:w-[390px] shrink-0 rounded-2xl bg-black/40 backdrop-blur-md border border-white/15 hover:border-violet-400/40 p-5 sm:p-6 flex flex-col justify-between transition-all duration-300 shadow-[0_12px_40px_rgba(0,0,0,0.5)]"
       >
-        {/* Cabecera Técnica */}
-        <div className="flex items-center justify-between gap-3 pb-2.5 mb-3.5 border-b border-white/[0.12] font-mono">
-          <div className="flex items-center gap-2.5">
-            <span className="w-2 h-2 rounded-full bg-violet-400 animate-pulse shadow-[0_0_10px_rgba(192,132,252,0.9)]" />
-            <span className="text-sm sm:text-base font-bold tracking-wider text-white">
-              FORMACIÓN_ACADÉMICA // EDUCATION.TXT
-            </span>
+        {/* Cabecera */}
+        <div className="flex items-center justify-between pb-2.5 mb-3 border-b border-white/10 font-mono text-xs">
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-violet-400 animate-pulse shadow-[0_0_8px_rgba(192,132,252,0.9)]" />
+            <span className="font-bold text-white tracking-wider">DEV // PERFIL</span>
           </div>
-          <span className="text-[11px] text-violet-300/90 font-mono tracking-widest uppercase">
-            [ REGISTRO ACADÉMICO OFICIAL ]
-          </span>
+          <span className="text-[11px] text-emerald-400 font-bold uppercase tracking-wider">ONLINE</span>
         </div>
 
-        {/* 3 Columnas Ampliadas */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-8 font-sans">
-          
-          {/* Columna 1 */}
-          <div className="flex flex-col gap-2">
-            <div className="flex items-center justify-between font-mono text-[10px] sm:text-[11px]">
-              <span className="text-violet-400 font-semibold">[GRADO SUPERIOR]</span>
-              <span className="text-zinc-400">2022 — PRESENTE</span>
-            </div>
-            <h4 className="font-mono text-base sm:text-lg font-bold text-white tracking-wide">
-              Ingeniería / Lic. en Sistemas
-            </h4>
-            <p className="text-xs sm:text-[13px] text-zinc-200 leading-relaxed font-light line-clamp-2">
-              Formación universitaria en diseño de algoritmos, computación gráfica y sistemas distribuidos.
+        {/* Visor de Foto Real - Proporción 3:4 agrandada un ~20% */}
+        <div className="relative w-full max-w-[225px] sm:max-w-[245px] mx-auto aspect-[3/4] rounded-xl overflow-hidden bg-black/30 border border-white/20 shadow-md group">
+          <img
+            src={`${getBasePath()}/profile.jpg`}
+            alt="Federico Marcenac"
+            className="w-full h-full object-cover object-top filter contrast-[1.02] brightness-[1.01] transition-transform duration-500 group-hover:scale-105"
+          />
+          {/* Borde interior sutil */}
+          <div className="absolute inset-0 rounded-xl ring-1 ring-inset ring-white/15 pointer-events-none" />
+        </div>
+
+        {/* Bio Real del CV */}
+        <div className="mt-3.5 flex flex-col gap-2 font-mono">
+          <div>
+            <h3 className="text-lg sm:text-xl font-bold text-white tracking-wide">
+              Federico Marcenac
+            </h3>
+            <p className="text-xs sm:text-[13px] text-violet-300/90 font-light mt-0.5">
+              Programación • Soporte IT • Help Desk
             </p>
           </div>
 
-          {/* Columna 2 */}
-          <div className="flex flex-col gap-2">
-            <div className="flex items-center justify-between font-mono text-[10px] sm:text-[11px]">
-              <span className="text-cyan-400 font-semibold">[ESPECIALIZACIÓN]</span>
-              <span className="text-zinc-400">CERTIFICADO</span>
-            </div>
-            <h4 className="font-mono text-base sm:text-lg font-bold text-white tracking-wide">
-              Arquitectura Web & 3D
-            </h4>
-            <p className="text-xs sm:text-[13px] text-zinc-200 leading-relaxed font-light line-clamp-2">
-              Entrenamiento avanzado en WebGL, Three.js, Canvas HTML5, Shaders GLSL y ecosistema React/Next.js.
-            </p>
+          <p className="text-xs text-zinc-300 font-sans leading-relaxed line-clamp-3">
+            Estudiante de Programación (UTN) con sólida experiencia práctica en soporte técnico, diagnóstico de hardware/software, redes y desarrollo web.
+          </p>
+
+          <div className="flex items-center gap-1.5 text-[11px] text-emerald-400 pt-0.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
+            <span className="tracking-wider uppercase font-semibold">DISPONIBLE // FULL-TIME</span>
           </div>
 
-          {/* Columna 3 */}
-          <div className="flex flex-col gap-2">
-            <div className="flex items-center justify-between font-mono text-[10px] sm:text-[11px]">
-              <span className="text-amber-400 font-semibold">[INFRAESTRUCTURA]</span>
-              <span className="text-zinc-400">PROFESIONAL</span>
+          {/* Ubicación y Enlaces */}
+          <div className="pt-2.5 border-t border-white/10 flex flex-col gap-2 text-xs">
+            <div className="flex items-center justify-between text-zinc-400">
+              <span>UBICACIÓN:</span>
+              <span className="text-white font-medium">Bahía Blanca, ARG</span>
             </div>
-            <h4 className="font-mono text-base sm:text-lg font-bold text-white tracking-wide">
-              Sistemas Cloud & DevOps
-            </h4>
-            <p className="text-xs sm:text-[13px] text-zinc-200 leading-relaxed font-light line-clamp-2">
-              Microservicios con Docker, CI/CD, bases de datos optimizadas y optimización de Core Web Vitals.
-            </p>
+            <div className="flex items-center justify-between gap-2 pt-0.5">
+              <a
+                href="https://linkedin.com/in/federico-marcenac-546ab228b"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-1 py-1.5 px-2 rounded-md bg-white/[0.06] hover:bg-white/[0.14] text-center text-zinc-200 hover:text-white border border-white/10 transition-colors text-[11px] uppercase font-semibold tracking-wider"
+              >
+                LinkedIn
+              </a>
+              <a
+                href="https://github.com/FedericoMarcenac"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-1 py-1.5 px-2 rounded-md bg-white/[0.06] hover:bg-white/[0.14] text-center text-zinc-200 hover:text-white border border-white/10 transition-colors text-[11px] uppercase font-semibold tracking-wider"
+              >
+                GitHub
+              </a>
+              <a
+                href="mailto:federicomarcenac14@gmail.com"
+                className="flex-1 py-1.5 px-2 rounded-md bg-violet-500/20 hover:bg-violet-500/35 text-center text-violet-200 hover:text-white border border-violet-400/30 transition-colors text-[11px] uppercase font-semibold tracking-wider"
+              >
+                Email
+              </a>
+            </div>
           </div>
-
         </div>
       </div>
 
-      {/* =========================================================================
-          FILA INFERIOR: CARTA 2 (FOTO) + CARTA 3 (TECNOLOGÍAS CON LOGOS)
-         ========================================================================= */}
-      <div className="w-full flex flex-col sm:flex-row gap-5 sm:gap-6 items-stretch">
+      {/* =======================================================================
+          COLUMNA DERECHA:
+          1. FORMACIÓN ACADÉMICA (Arriba, UTN + Coderhouse)
+          2. HABILIDADES & STACK TÉCNICO (Abajo)
+          Ambas cartas base más transparentes y con ~20% más amplitud
+         ======================================================================= */}
+      <div className="flex-1 flex flex-col gap-4 lg:gap-5 justify-between">
         
-        {/* =======================================================================
-            CARTA 2: FOTO DE PERFIL
-           ======================================================================= */}
+        {/* CARTA 1: FORMACIÓN ACADÉMICA (Base transparente con contraste legible) */}
         <div
-          style={{
-            transform: `translate3d(${baseOffset * 1.25}px, 0, 0)`,
-            willChange: "transform, opacity",
-          }}
-          className="w-full sm:w-[300px] lg:w-[340px] shrink-0 rounded-2xl bg-black/28 backdrop-blur-sm border border-white/[0.12] hover:border-violet-400/35 p-4 sm:p-5 flex flex-col justify-between transition-all duration-300 shadow-[0_10px_35px_rgba(0,0,0,0.6)]"
+          className="w-full rounded-2xl bg-black/40 backdrop-blur-md border border-white/15 hover:border-violet-400/40 p-5 sm:p-6 transition-all duration-300 shadow-[0_12px_40px_rgba(0,0,0,0.5)]"
         >
-          {/* Cabecera */}
-          <div className="flex items-center justify-between pb-2 mb-3 border-b border-white/[0.12] font-mono text-xs">
+          {/* Cabecera Técnica */}
+          <div className="flex items-center justify-between gap-3 pb-2.5 mb-3 border-b border-white/10 font-mono">
             <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-violet-400 animate-pulse shadow-[0_0_8px_rgba(192,132,252,0.9)]" />
-              <span className="font-bold text-white tracking-wider">DEV // PERFIL</span>
-            </div>
-            <span className="text-[10px] text-emerald-400 font-bold uppercase tracking-wider">ONLINE</span>
-          </div>
-
-          {/* Visor de Foto PNG */}
-          <div className="relative w-full h-44 sm:h-52 rounded-xl flex items-center justify-center overflow-hidden">
-            <img
-              src={`${getBasePath()}/profile.png`}
-              alt="Foto de Perfil"
-              onError={(e) => {
-                e.currentTarget.style.display = "none";
-              }}
-              className="absolute inset-0 w-full h-full object-contain object-bottom z-10 filter drop-shadow-[0_10px_22px_rgba(192,132,252,0.4)]"
-            />
-
-            {/* Placeholder holográfico */}
-            <div className="flex flex-col items-center justify-center gap-2.5 p-3 text-center z-0">
-              <div className="w-16 h-16 rounded-full border border-dashed border-violet-400/50 flex items-center justify-center shadow-[0_0_18px_rgba(192,132,252,0.3)]">
-                <svg
-                  className="w-8 h-8 text-violet-300/80"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={1.5}
-                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                  />
-                </svg>
-              </div>
-              <div className="font-mono text-center">
-                <span className="text-xs text-white font-bold block">FOTO_PERFIL.PNG</span>
-                <span className="text-[10px] text-zinc-400 block mt-0.5">
-                  public/profile.png
-                </span>
-              </div>
-            </div>
-          </div>
-
-          {/* Bio Proporcionada */}
-          <div className="mt-3 flex flex-col gap-2 font-mono">
-            <div>
-              <h3 className="text-base sm:text-lg font-bold text-white tracking-wide">
-                Desarrollador Full Stack & 3D
-              </h3>
-              <p className="text-xs text-violet-300/90 font-light">
-                Experiencias web interactivas y código limpio
-              </p>
-            </div>
-
-            <div className="flex items-center gap-2 text-[10px] text-emerald-400 pt-0.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
-              <span className="tracking-wider uppercase font-semibold">DISPONIBLE PARA PROYECTOS</span>
-            </div>
-
-            <div className="pt-2 border-t border-white/[0.12] flex items-center justify-between text-[11px] text-zinc-400">
-              <span>UBICACIÓN:</span>
-              <span className="text-white font-medium">ARGENTINA // REMOTO</span>
-            </div>
-          </div>
-        </div>
-
-        {/* =======================================================================
-            CARTA 3: TECNOLOGÍAS QUE DOMINO CON LOGOS
-           ======================================================================= */}
-        <div
-          style={{
-            transform: `translate3d(${baseOffset * 1.45}px, 0, 0)`,
-            willChange: "transform, opacity",
-          }}
-          className="flex-1 rounded-2xl bg-black/28 backdrop-blur-sm border border-white/[0.12] hover:border-cyan-400/35 p-4 sm:p-6 flex flex-col justify-between transition-all duration-300 shadow-[0_10px_35px_rgba(0,0,0,0.6)]"
-        >
-          {/* Cabecera */}
-          <div className="flex items-center justify-between gap-3 pb-2.5 mb-3.5 border-b border-white/[0.12] font-mono">
-            <div className="flex items-center gap-2.5">
-              <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse shadow-[0_0_10px_rgba(56,189,248,0.9)]" />
-              <span className="text-sm sm:text-base font-bold tracking-wider text-white">
-                TECNOLOGÍAS QUE DOMINO // TECH_STACK.LOG
+              <span className="w-2 h-2 rounded-full bg-violet-400 animate-pulse shadow-[0_0_10px_rgba(192,132,252,0.9)]" />
+              <span className="text-xs sm:text-sm font-bold tracking-wider text-white">
+                FORMACIÓN_ACADÉMICA // EDUCATION.TXT
               </span>
             </div>
-            <span className="text-[11px] text-cyan-300 font-mono tracking-widest uppercase">
-              [ 24+ STACK ]
+            <span className="text-[10px] sm:text-[11px] text-violet-300/90 font-mono tracking-widest uppercase">
+              [ REGISTRO ACADÉMICO ]
             </span>
           </div>
 
-          {/* Grilla 2x2 de Tecnologías con imágenes de logos oficiales */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5 font-mono">
+          {/* 2 Columnas de Formación (UTN y Coderhouse) */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 font-sans">
             
-            {/* Categoría 1: Frontend & 3D */}
-            <div className="flex flex-col gap-2">
-              <div className="flex items-center justify-between text-[11px] text-cyan-400 font-bold tracking-wider">
-                <span>01 // FRONTEND & 3D</span>
-                <span className="text-zinc-500 font-normal">AVANZADO</span>
+            {/* UTN FRBB */}
+            <div className="flex flex-col gap-1.5 p-3.5 sm:p-4 rounded-xl bg-white/[0.04] border border-white/10 hover:border-white/20 transition-colors">
+              <div className="flex items-center justify-between font-mono text-[10px] sm:text-[11px]">
+                <span className="text-emerald-400 font-semibold">[CARRERA EN CURSO]</span>
+                <span className="text-zinc-400">2024 — ACTUALIDAD</span>
               </div>
-              <div className="flex flex-wrap gap-2">
+              <h4 className="font-mono text-sm sm:text-base font-bold text-white tracking-wide">
+                Tecnicatura Univ. en Programación
+              </h4>
+              <div className="font-mono text-xs text-violet-300/90 font-medium">
+                UTN — Facultad Regional Bahía Blanca
+              </div>
+              <p className="text-xs sm:text-[13px] text-zinc-300 leading-relaxed font-light">
+                Desarrollo de software, algoritmos, bases de datos y metodologías ágiles. Finalización estimada: Febrero 2027.
+              </p>
+            </div>
+
+            {/* Coderhouse */}
+            <div className="flex flex-col gap-1.5 p-3.5 sm:p-4 rounded-xl bg-white/[0.04] border border-white/10 hover:border-white/20 transition-colors">
+              <div className="flex items-center justify-between font-mono text-[10px] sm:text-[11px]">
+                <span className="text-cyan-400 font-semibold">[CERTIFICACIONES]</span>
+                <span className="text-zinc-400">2022 — 2023</span>
+              </div>
+              <h4 className="font-mono text-sm sm:text-base font-bold text-white tracking-wide">
+                Desarrollo Web, Backend & Ciberseguridad
+              </h4>
+              <div className="font-mono text-xs text-cyan-300/90 font-medium">
+                Coderhouse
+              </div>
+              <p className="text-xs sm:text-[13px] text-zinc-300 leading-relaxed font-light">
+                Formación práctica en ecosistema web moderno, arquitectura backend con Node.js/Express, bases de datos y seguridad.
+              </p>
+            </div>
+
+          </div>
+        </div>
+
+        {/* CARTA 2: HABILIDADES & STACK TÉCNICO (Base transparente y amplitud aumentada) */}
+        <div
+          className="w-full flex-1 rounded-2xl bg-black/40 backdrop-blur-md border border-white/15 hover:border-cyan-400/40 p-5 sm:p-6 flex flex-col justify-between transition-all duration-300 shadow-[0_12px_40px_rgba(0,0,0,0.5)]"
+        >
+          {/* Cabecera */}
+          <div className="flex items-center justify-between gap-3 pb-2.5 mb-3 border-b border-white/10 font-mono">
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse shadow-[0_0_10px_rgba(56,189,248,0.9)]" />
+              <span className="text-xs sm:text-sm font-bold tracking-wider text-white">
+                HABILIDADES & STACK TÉCNICO // TECH_STACK.LOG
+              </span>
+            </div>
+            <span className="text-[10px] sm:text-[11px] text-cyan-300 font-mono tracking-widest uppercase">
+              [ STACK REAL ]
+            </span>
+          </div>
+
+          {/* Grilla 2x2 de Tecnologías con logos */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-4 font-mono">
+            
+            {/* Categoría 1: Frontend & Web */}
+            <div className="flex flex-col gap-1.5">
+              <div className="flex items-center justify-between text-[11px] sm:text-xs text-cyan-400 font-bold tracking-wider">
+                <span>01 // DESARROLLO WEB & FRONTEND</span>
+                <span className="text-zinc-500 font-normal">SÓLIDO</span>
+              </div>
+              <div className="flex flex-wrap gap-1.5 sm:gap-2">
                 {FRONTEND_TECHS.map((tech) => (
                   <span
                     key={tech.name}
-                    className="inline-flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-md bg-black/35 backdrop-blur-sm text-zinc-100 border border-white/[0.12] hover:border-cyan-400 hover:text-cyan-200 transition-all group"
+                    className="inline-flex items-center gap-1.5 text-xs px-3 py-1 rounded-md bg-black/40 backdrop-blur-sm text-zinc-100 border border-white/10 hover:border-cyan-400 hover:text-cyan-200 transition-all group"
                   >
                     <img
                       src={tech.logo}
                       alt={tech.name}
                       loading="lazy"
-                      className="w-3.5 h-3.5 object-contain shrink-0 group-hover:scale-110 transition-transform"
+                      className="w-4 h-4 object-contain shrink-0 group-hover:scale-110 transition-transform"
                       onError={(e) => {
                         e.currentTarget.style.display = "none";
                       }}
@@ -293,23 +280,50 @@ export default function AboutCards({ currentFrame }: AboutCardsProps) {
               </div>
             </div>
 
-            {/* Categoría 2: Backend & APIs */}
-            <div className="flex flex-col gap-2">
-              <div className="flex items-center justify-between text-[11px] text-emerald-400 font-bold tracking-wider">
-                <span>02 // BACKEND & SERVICIOS</span>
-                <span className="text-zinc-500 font-normal">SÓLIDO</span>
+            {/* Categoría 2: Soporte IT, Redes & Hardware */}
+            <div className="flex flex-col gap-1.5">
+              <div className="flex items-center justify-between text-[11px] sm:text-xs text-emerald-400 font-bold tracking-wider">
+                <span>02 // SOPORTE IT, REDES & HERRAMIENTAS</span>
+                <span className="text-zinc-500 font-normal">EXPERIENCIA</span>
               </div>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-1.5 sm:gap-2">
+                {SUPPORT_DEVOPS_TECHS.map((tech) => (
+                  <span
+                    key={tech.name}
+                    className="inline-flex items-center gap-1.5 text-xs px-3 py-1 rounded-md bg-black/40 backdrop-blur-sm text-zinc-100 border border-white/10 hover:border-emerald-400 hover:text-emerald-200 transition-all group"
+                  >
+                    <img
+                      src={tech.logo}
+                      alt={tech.name}
+                      loading="lazy"
+                      className="w-4 h-4 object-contain shrink-0 group-hover:scale-110 transition-transform"
+                      onError={(e) => {
+                        e.currentTarget.style.display = "none";
+                      }}
+                    />
+                    <span>{tech.name}</span>
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            {/* Categoría 3: Backend & Programación */}
+            <div className="flex flex-col gap-1.5">
+              <div className="flex items-center justify-between text-[11px] sm:text-xs text-violet-400 font-bold tracking-wider">
+                <span>03 // BACKEND & PROGRAMACIÓN</span>
+                <span className="text-zinc-500 font-normal">APIs & LÓGICA</span>
+              </div>
+              <div className="flex flex-wrap gap-1.5 sm:gap-2">
                 {BACKEND_TECHS.map((tech) => (
                   <span
                     key={tech.name}
-                    className="inline-flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-md bg-black/35 backdrop-blur-sm text-zinc-100 border border-white/[0.12] hover:border-emerald-400 hover:text-emerald-200 transition-all group"
+                    className="inline-flex items-center gap-1.5 text-xs px-3 py-1 rounded-md bg-black/40 backdrop-blur-sm text-zinc-100 border border-white/10 hover:border-violet-400 hover:text-violet-200 transition-all group"
                   >
                     <img
                       src={tech.logo}
                       alt={tech.name}
                       loading="lazy"
-                      className="w-3.5 h-3.5 object-contain shrink-0 group-hover:scale-110 transition-transform"
+                      className="w-4 h-4 object-contain shrink-0 group-hover:scale-110 transition-transform"
                       onError={(e) => {
                         e.currentTarget.style.display = "none";
                       }}
@@ -320,50 +334,23 @@ export default function AboutCards({ currentFrame }: AboutCardsProps) {
               </div>
             </div>
 
-            {/* Categoría 3: Bases de Datos & Caché */}
-            <div className="flex flex-col gap-2">
-              <div className="flex items-center justify-between text-[11px] text-violet-400 font-bold tracking-wider">
-                <span>03 // BASES DE DATOS</span>
-                <span className="text-zinc-500 font-normal">OPTIMIZADO</span>
+            {/* Categoría 4: Bases de Datos */}
+            <div className="flex flex-col gap-1.5">
+              <div className="flex items-center justify-between text-[11px] sm:text-xs text-amber-400 font-bold tracking-wider">
+                <span>04 // BASES DE DATOS</span>
+                <span className="text-zinc-500 font-normal">SQL & PERSISTENCIA</span>
               </div>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-1.5 sm:gap-2">
                 {DATABASE_TECHS.map((tech) => (
                   <span
                     key={tech.name}
-                    className="inline-flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-md bg-black/35 backdrop-blur-sm text-zinc-100 border border-white/[0.12] hover:border-violet-400 hover:text-violet-200 transition-all group"
+                    className="inline-flex items-center gap-1.5 text-xs px-3 py-1 rounded-md bg-black/40 backdrop-blur-sm text-zinc-100 border border-white/10 hover:border-amber-400 hover:text-amber-200 transition-all group"
                   >
                     <img
                       src={tech.logo}
                       alt={tech.name}
                       loading="lazy"
-                      className="w-3.5 h-3.5 object-contain shrink-0 group-hover:scale-110 transition-transform"
-                      onError={(e) => {
-                        e.currentTarget.style.display = "none";
-                      }}
-                    />
-                    <span>{tech.name}</span>
-                  </span>
-                ))}
-              </div>
-            </div>
-
-            {/* Categoría 4: Herramientas & Cloud */}
-            <div className="flex flex-col gap-2">
-              <div className="flex items-center justify-between text-[11px] text-amber-400 font-bold tracking-wider">
-                <span>04 // DEVOPS & HERRAMIENTAS</span>
-                <span className="text-zinc-500 font-normal">PRODUCCIÓN</span>
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {DEVOPS_TECHS.map((tech) => (
-                  <span
-                    key={tech.name}
-                    className="inline-flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-md bg-black/35 backdrop-blur-sm text-zinc-100 border border-white/[0.12] hover:border-amber-400 hover:text-amber-200 transition-all group"
-                  >
-                    <img
-                      src={tech.logo}
-                      alt={tech.name}
-                      loading="lazy"
-                      className="w-3.5 h-3.5 object-contain shrink-0 group-hover:scale-110 transition-transform"
+                      className="w-4 h-4 object-contain shrink-0 group-hover:scale-110 transition-transform"
                       onError={(e) => {
                         e.currentTarget.style.display = "none";
                       }}
@@ -377,11 +364,11 @@ export default function AboutCards({ currentFrame }: AboutCardsProps) {
           </div>
 
           {/* Pie */}
-          <div className="mt-3.5 pt-2.5 border-t border-white/[0.12] flex items-center justify-between font-mono text-[11px] text-zinc-400">
+          <div className="mt-3.5 pt-2.5 border-t border-white/10 flex items-center justify-between font-mono text-[10px] sm:text-[11px] text-zinc-400">
             <span className="flex items-center gap-1.5">
-              <span className="text-cyan-400">⚡</span> ALTO RENDIMIENTO & CÓDIGO LIMPIO
+              <span className="text-emerald-400">●</span> 6+ AÑOS EN NEGOCIO FAMILIAR (ETTONAZZEM)
             </span>
-            <span className="text-zinc-200 font-semibold">[READY TO SHIP]</span>
+            <span className="text-zinc-200 font-semibold">[PROACTIVO & RESOLUTIVO]</span>
           </div>
         </div>
 

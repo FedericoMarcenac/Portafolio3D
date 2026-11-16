@@ -9,8 +9,8 @@ const plusJakartaSans = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "portafolio.txt",
-  description: "Portfolio de desarrollo web y creativo con experiencia visual 3D.",
+  title: "Federico Marcenac | portafolio.txt",
+  description: "Portfolio de Federico Marcenac - Estudiante de Programación, Soporte IT y Desarrollador Web.",
 };
 
 export default function RootLayout({
