@@ -25,6 +25,9 @@ const SEQ3_REPEAT_FRAMES = SEQ3_LOOP_COUNT * SEQ3_TOTAL_LOOPS; // 62 frames
 // Total continuous steps: 150 + 149 + 118 + 62 = 479 frames
 const TOTAL_CONTINUOUS_FRAMES = SEQ1_COUNT + SEQ2_COUNT + SEQ3_COUNT + SEQ3_REPEAT_FRAMES;
 
+// Base path para GitHub Pages (/Portafolio3D en producción)
+const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH || "";
+
 // Helper to resolve the image source for any continuous index (1 to 479)
 const getFrameData = (
   globalIndex: number
@@ -32,7 +35,7 @@ const getFrameData = (
   if (globalIndex <= SEQ1_COUNT) {
     const pad = String(globalIndex).padStart(3, "0");
     return {
-      url: `/Frames/frame_${pad}.jpg`,
+      url: `${BASE_PATH}/Frames/frame_${pad}.jpg`,
       sequence: 1,
       localIndex: globalIndex,
     };
@@ -41,7 +44,7 @@ const getFrameData = (
     const secondFrameNumber = Math.min(SEQ2_END_FRAME, SEQ2_START_FRAME + offset);
     const pad = String(secondFrameNumber).padStart(3, "0");
     return {
-      url: `/FramesMedios/frame_${pad}.jpg`,
+      url: `${BASE_PATH}/FramesMedios/frame_${pad}.jpg`,
       sequence: 2,
       localIndex: secondFrameNumber,
     };
@@ -50,7 +53,7 @@ const getFrameData = (
     const thirdFrameNumber = Math.min(SEQ3_END_FRAME, SEQ3_START_FRAME + offset);
     const pad = String(thirdFrameNumber).padStart(3, "0");
     return {
-      url: `/FramesGato/frame_${pad}.jpg`,
+      url: `${BASE_PATH}/FramesGato/frame_${pad}.jpg`,
       sequence: 3,
       localIndex: thirdFrameNumber,
     };
@@ -61,7 +64,7 @@ const getFrameData = (
     const thirdFrameNumber = Math.min(SEQ3_LOOP_END, SEQ3_LOOP_START + loopIndex);
     const pad = String(thirdFrameNumber).padStart(3, "0");
     return {
-      url: `/FramesGato/frame_${pad}.jpg`,
+      url: `${BASE_PATH}/FramesGato/frame_${pad}.jpg`,
       sequence: 3,
       localIndex: thirdFrameNumber,
     };
@@ -314,7 +317,7 @@ export default function ContinuousScrollCanvas({
       queue.push({
         sequence: 1,
         localIndex: idx,
-        url: `/Frames/frame_${String(idx).padStart(3, "0")}.jpg`,
+        url: `${BASE_PATH}/Frames/frame_${String(idx).padStart(3, "0")}.jpg`,
       });
     });
 
@@ -322,7 +325,7 @@ export default function ContinuousScrollCanvas({
       queue.push({
         sequence: 2,
         localIndex: idx,
-        url: `/FramesMedios/frame_${String(idx).padStart(3, "0")}.jpg`,
+        url: `${BASE_PATH}/FramesMedios/frame_${String(idx).padStart(3, "0")}.jpg`,
       });
     });
 
@@ -330,7 +333,7 @@ export default function ContinuousScrollCanvas({
       queue.push({
         sequence: 3,
         localIndex: idx,
-        url: `/FramesGato/frame_${String(idx).padStart(3, "0")}.jpg`,
+        url: `${BASE_PATH}/FramesGato/frame_${String(idx).padStart(3, "0")}.jpg`,
       });
     });
 
@@ -339,7 +342,7 @@ export default function ContinuousScrollCanvas({
       queue.push({
         sequence: 1,
         localIndex: idx,
-        url: `/Frames/frame_${String(idx).padStart(3, "0")}.jpg`,
+        url: `${BASE_PATH}/Frames/frame_${String(idx).padStart(3, "0")}.jpg`,
       });
     });
 
@@ -347,7 +350,7 @@ export default function ContinuousScrollCanvas({
       queue.push({
         sequence: 2,
         localIndex: idx,
-        url: `/FramesMedios/frame_${String(idx).padStart(3, "0")}.jpg`,
+        url: `${BASE_PATH}/FramesMedios/frame_${String(idx).padStart(3, "0")}.jpg`,
       });
     });
 
@@ -355,7 +358,7 @@ export default function ContinuousScrollCanvas({
       queue.push({
         sequence: 3,
         localIndex: idx,
-        url: `/FramesGato/frame_${String(idx).padStart(3, "0")}.jpg`,
+        url: `${BASE_PATH}/FramesGato/frame_${String(idx).padStart(3, "0")}.jpg`,
       });
     });
 
