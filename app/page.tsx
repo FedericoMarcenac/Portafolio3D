@@ -77,7 +77,7 @@ export default function Home() {
              ======================================================== */}
           <div
             className={`absolute inset-0 z-10 w-full h-full pointer-events-none flex flex-col justify-between transition-opacity duration-700 ${
-              globalFrame > 140 && globalFrame <= 289 ? "opacity-100" : "opacity-0"
+              globalFrame > 165 && globalFrame <= 295 ? "opacity-100" : "opacity-0"
             }`}
           >
             {/* Espacio superior para el navbar */}
@@ -119,7 +119,7 @@ export default function Home() {
              ======================================================== */}
           <div
             className={`absolute inset-0 z-10 w-full h-full pointer-events-none flex flex-col justify-between transition-opacity duration-700 ${
-              globalFrame > 289 ? "opacity-100" : "opacity-0"
+              globalFrame > 295 ? "opacity-100" : "opacity-0"
             }`}
           >
             {/* Espacio superior para el navbar */}
@@ -128,7 +128,7 @@ export default function Home() {
             {/* Centro con las cartas de Sobre Mí y Contacto superpuestas con transición suave */}
             <div className="relative flex-1 w-full max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 flex items-center justify-center pointer-events-auto">
               
-              {/* Cartas Sobre Mí (Visibles entre frames 310 y 486, fade out hasta 495) */}
+              {/* Cartas Sobre Mí (Visibles entre frames 345 y 486, fade out hasta 495) */}
               <div className="w-full flex items-center justify-center">
                 <AboutCards currentFrame={globalFrame} />
               </div>
@@ -141,7 +141,11 @@ export default function Home() {
             </div>
 
             {/* Parte inferior: Título dinámico (sobreMi.txt -> contacto.txt al entrar en frame 126 de FramesSalto) */}
-            <div className="w-full max-w-7xl mx-auto px-4 sm:px-10 lg:px-16 pb-4 sm:pb-8 flex items-end justify-between select-none">
+            <div
+              className={`w-full max-w-7xl mx-auto px-4 sm:px-10 lg:px-16 pb-4 sm:pb-8 flex items-end justify-between select-none transition-opacity duration-500 ${
+                globalFrame >= 335 ? "opacity-100" : "opacity-0"
+              }`}
+            >
               
               {/* Título pequeño con cambio de color y texto dinámico */}
               <div className="flex flex-col items-start gap-1 font-mono transition-all duration-300">

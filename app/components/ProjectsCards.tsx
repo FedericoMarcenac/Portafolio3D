@@ -169,28 +169,30 @@ export default function ProjectsCards({ currentFrame }: ProjectsCardsProps) {
   };
 
   // Aparecen progresivamente en los frames de medio (entre frame 140 y 289)
-  const START_FRAME = 145;
-  const SETTLE_FRAME = 210;
+  // Ahora aparecen más tarde (sobre el final de la fase), se quedan fijas y desaparecen hacia la izquierda
+  const START_FRAME = 190;
+  const SETTLE_FRAME = 235;
+  const FADE_OUT_START = 272;
+  const FADE_OUT_END = 295;
 
   if (currentFrame < START_FRAME) {
     return null;
   }
 
-  // Progreso progresivo suave de entrada
+  // Progreso progresivo suave de entrada (0 a 1)
   const rawProgress = Math.max(0, Math.min(1, (currentFrame - START_FRAME) / (SETTLE_FRAME - START_FRAME)));
   const progress = Math.sin((rawProgress * Math.PI) / 2);
 
-  // Desvanecimiento suave al salir hacia la Fase 3
-  const FADE_OUT_START = 275;
-  const FADE_OUT_END = 295;
-
   let opacity = progress;
+  let exitFactor = 0; // 0 = en reposo, 1 = salida completada hacia la izquierda
+
   if (currentFrame > FADE_OUT_START) {
     if (currentFrame >= FADE_OUT_END) {
       return null;
     }
-    const exitProgress = 1 - (currentFrame - FADE_OUT_START) / (FADE_OUT_END - FADE_OUT_START);
-    opacity = Math.sin((exitProgress * Math.PI) / 2);
+    const rawExit = (currentFrame - FADE_OUT_START) / (FADE_OUT_END - FADE_OUT_START);
+    exitFactor = Math.sin((rawExit * Math.PI) / 2);
+    opacity = Math.max(0, 1 - exitFactor);
   }
 
   const toggleSelectCard = (id: string) => {
@@ -202,6 +204,10 @@ export default function ProjectsCards({ currentFrame }: ProjectsCardsProps) {
     setActiveImageIndexes((prev) => ({ ...prev, [projId]: idx }));
   };
 
+  const isDesktop = typeof window !== "undefined" && window.innerWidth >= 640;
+  const exitSlideDistance = isDesktop ? 380 : 240;
+  const exitOffset = -exitFactor * exitSlideDistance;
+
   return (
     <div
       className="relative w-full h-full select-none flex flex-col items-center justify-center p-1 sm:p-4 lg:p-6"
@@ -212,7 +218,13 @@ export default function ProjectsCards({ currentFrame }: ProjectsCardsProps) {
       {/* ========================================================
           SELECTOR RÁPIDO PARA CELULARES (Oculto en Desktop)
          ======================================================== */}
-      <div className="sm:hidden flex items-center justify-center gap-2 mb-2 z-30">
+      <div
+        className="sm:hidden flex items-center justify-center gap-2 mb-2 z-30 transition-all duration-300"
+        style={{
+          opacity: opacity,
+          transform: currentFrame > FADE_OUT_START ? `translate3d(${exitOffset * 0.4}px, 0, 0)` : undefined,
+        }}
+      >
         {projects.map((proj, idx) => (
           <button
             key={proj.id}
@@ -234,7 +246,10 @@ export default function ProjectsCards({ currentFrame }: ProjectsCardsProps) {
          ======================================================== */}
       <div
         className="absolute inset-0 pointer-events-none -z-10 hidden sm:block overflow-visible transition-opacity duration-300"
-        style={{ opacity: opacity }}
+        style={{
+          opacity: opacity,
+          transform: currentFrame > FADE_OUT_START ? `translate3d(${exitOffset * 0.4}px, 0, 0)` : undefined,
+        }}
       >
         <svg
           className="w-full h-full"
@@ -317,11 +332,14 @@ export default function ProjectsCards({ currentFrame }: ProjectsCardsProps) {
           const currentImgIndex = activeImageIndexes[proj.id] || 0;
           const activeImage = proj.gallery[currentImgIndex]?.image || proj.mainImage;
 
-          // Desplazamiento lateral desde los costados
-          const lateralOffset =
-            proj.side === "left"
-              ? -(1 - progress) * 160
-              : (1 - progress) * 160;
+          // Desplazamiento lateral:
+          // 1. Entrada: se deslizan desde los laterales (desktop)
+          // 2. Reposo: se quedan fijas exactamente donde están (offset = 0)
+          // 3. Salida: desaparecen desplazándose hacia la izquierda (-X)
+          const entryOffset = isDesktop
+            ? (proj.side === "left" ? -(1 - progress) * 160 : (1 - progress) * 160)
+            : 0;
+          const lateralOffset = currentFrame > FADE_OUT_START ? exitOffset : entryOffset;
 
           return (
             <div

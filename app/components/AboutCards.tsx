@@ -57,23 +57,29 @@ const getBasePath = (): string => {
 };
 
 export default function AboutCards({ currentFrame }: AboutCardsProps) {
-  // Visibilidad exacta según especificación:
-  // - Frames < 310: Invisible (proyectos activos)
-  // - Frames 310–360: Entrada cinematográfica en Fase 3 (FramesGato)
-  // - Frames 360–486: Completamente visible y activo (incluye el inicio de FramesSalto)
-  // - Frames 486–495: Desvanecimiento suave para desaparecer exactamente en frame_088 de FramesSalto (global 495)
+  // Visibilidad:
+  // - Frames < 345: Invisible (transición limpia de gato)
+  // - Frames 345–390: Entrada cinemática más tardía (fade in suave con sutil elevación)
+  // - Frames 390–486: Completamente visible y activo
+  // - Frames 486–495: Desvanecimiento suave para desaparecer exactamente en frame_088 de FramesSalto (global 495) — TERMINA IGUAL QUE ANTES
   // - Frames >= 495: Completamente invisible (salto libre y limpio)
   let opacity = 0;
-  if (currentFrame < 310) {
+  let translateY = 0;
+
+  if (currentFrame < 345) {
     opacity = 0;
-  } else if (currentFrame >= 310 && currentFrame < 360) {
-    const p = (currentFrame - 310) / (360 - 310);
-    opacity = Math.sin((p * Math.PI) / 2);
-  } else if (currentFrame >= 360 && currentFrame <= 486) {
+  } else if (currentFrame >= 345 && currentFrame < 390) {
+    const p = (currentFrame - 345) / (390 - 345);
+    const progress = Math.sin((p * Math.PI) / 2);
+    opacity = progress;
+    translateY = (1 - progress) * 20;
+  } else if (currentFrame >= 390 && currentFrame <= 486) {
     opacity = 1.0;
+    translateY = 0;
   } else if (currentFrame > 486 && currentFrame <= 495) {
     const p = (currentFrame - 486) / (495 - 486);
     opacity = Math.max(0, 1 - Math.sin((p * Math.PI) / 2));
+    translateY = 0;
   } else {
     opacity = 0;
   }
@@ -83,6 +89,7 @@ export default function AboutCards({ currentFrame }: AboutCardsProps) {
       className="w-full max-w-7xl xl:max-w-[1420px] mx-auto flex flex-col md:flex-row gap-4 md:gap-5 lg:gap-6 items-stretch select-none transition-opacity duration-200 max-h-[72dvh] md:max-h-none overflow-y-auto md:overflow-visible no-scrollbar p-1"
       style={{
         opacity: opacity,
+        transform: translateY !== 0 ? `translate3d(0, ${translateY}px, 0)` : undefined,
         pointerEvents: opacity > 0.1 ? "auto" : "none",
         visibility: opacity > 0 ? "visible" : "hidden",
       }}
