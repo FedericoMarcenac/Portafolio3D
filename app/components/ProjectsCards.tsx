@@ -148,6 +148,8 @@ interface ProjectsCardsProps {
 
 export default function ProjectsCards({ currentFrame }: ProjectsCardsProps) {
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [activeMobileIndex, setActiveMobileIndex] = useState(0);
+  const cardRefs = React.useRef<{ [key: string]: HTMLDivElement | null }>({});
   const [activeImageIndexes, setActiveImageIndexes] = useState<{ [key: string]: number }>({
     "proj-1": 0,
     "proj-2": 0,
@@ -157,6 +159,14 @@ export default function ProjectsCards({ currentFrame }: ProjectsCardsProps) {
 
   const basePath = getBasePath();
   const projects = getProjects(basePath);
+
+  const scrollToProject = (id: string, index: number) => {
+    setActiveMobileIndex(index);
+    const el = cardRefs.current[id];
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+    }
+  };
 
   // Aparecen progresivamente en los frames de medio (entre frame 140 y 289)
   const START_FRAME = 145;
@@ -194,11 +204,30 @@ export default function ProjectsCards({ currentFrame }: ProjectsCardsProps) {
 
   return (
     <div
-      className="relative w-full h-full select-none flex items-center justify-center p-2 sm:p-4 lg:p-6"
+      className="relative w-full h-full select-none flex flex-col items-center justify-center p-1 sm:p-4 lg:p-6"
       style={{
         pointerEvents: opacity > 0.4 ? "auto" : "none",
       }}
     >
+      {/* ========================================================
+          SELECTOR RÁPIDO PARA CELULARES (Oculto en Desktop)
+         ======================================================== */}
+      <div className="sm:hidden flex items-center justify-center gap-2 mb-2 z-30">
+        {projects.map((proj, idx) => (
+          <button
+            key={proj.id}
+            onClick={() => scrollToProject(proj.id, idx)}
+            className={`font-mono text-[11px] px-2.5 py-1 rounded-full border transition-all ${
+              activeMobileIndex === idx
+                ? "bg-white/20 text-white border-white/60 shadow-[0_0_10px_rgba(255,255,255,0.4)]"
+                : "bg-black/50 text-zinc-400 border-white/10 hover:border-white/30"
+            }`}
+          >
+            {proj.number}
+          </button>
+        ))}
+      </div>
+
       {/* ========================================================
           SISTEMA DE CABLES CIBERNÉTICOS (CONECTADOS AL NÚCLEO CENTRAL)
           Conectan el núcleo central (500, 300) con los 4 cuadrantes
@@ -264,11 +293,24 @@ export default function ProjectsCards({ currentFrame }: ProjectsCardsProps) {
       </div>
 
       {/* ========================================================
-          4 CUADRANTES DE PANTALLA COMPLETA (2 columnas x 2 filas)
+          4 CUADRANTES DE PANTALLA COMPLETA (Desktop 2x2, Celular carrusel deslizable con snap)
           Visual de alta calidad: bordes nítidos, filtros de contraste,
           chips elegantes y proporciones ampliadas
          ======================================================== */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 grid-rows-none sm:grid-rows-2 w-full h-full max-w-[1580px] gap-6 sm:gap-x-12 sm:gap-y-6 lg:gap-x-16 lg:gap-y-8 items-center justify-items-center">
+      <div
+        onScroll={(e) => {
+          const target = e.currentTarget;
+          const scrollLeft = target.scrollLeft;
+          const cardWidth = target.offsetWidth * 0.85;
+          if (cardWidth > 0) {
+            const idx = Math.min(projects.length - 1, Math.max(0, Math.round(scrollLeft / cardWidth)));
+            if (idx !== activeMobileIndex) {
+              setActiveMobileIndex(idx);
+            }
+          }
+        }}
+        className="flex sm:grid grid-cols-1 sm:grid-cols-2 grid-rows-none sm:grid-rows-2 w-full max-h-[75dvh] sm:max-h-none overflow-x-auto sm:overflow-visible snap-x snap-mandatory sm:snap-none no-scrollbar max-w-[1580px] gap-4 sm:gap-x-12 sm:gap-y-6 lg:gap-x-16 lg:gap-y-8 items-center justify-start sm:justify-items-center px-4 sm:px-0 py-2"
+      >
         {projects.map((proj) => {
           const isSelected = selectedId === proj.id;
           const isOtherSelected = selectedId !== null && !isSelected;
@@ -284,19 +326,22 @@ export default function ProjectsCards({ currentFrame }: ProjectsCardsProps) {
           return (
             <div
               key={proj.id}
+              ref={(el) => {
+                cardRefs.current[proj.id] = el;
+              }}
               style={{
                 opacity: Math.max(0, Math.min(1, opacity)),
                 transform: `translate3d(${lateralOffset}px, 0, 0)`,
                 willChange: "transform, opacity",
               }}
-              className="relative w-full flex items-center justify-center group"
+              className="relative w-[84vw] max-w-[340px] shrink-0 snap-center sm:w-full sm:max-w-[480px] sm:shrink sm:snap-align-none flex items-center justify-center group"
             >
               {/* Carta Expandible por Click */}
               <div
                 onClick={() => toggleSelectCard(proj.id)}
                 className={`relative w-full max-w-[480px] sm:max-w-[540px] lg:max-w-[600px] transition-all duration-300 ease-out cursor-pointer ${proj.originClass} ${
                   isSelected
-                    ? "z-50 scale-[1.05] sm:scale-[1.08] shadow-[0_35px_80px_rgba(0,0,0,0.98)]"
+                    ? "z-50 scale-[1.03] sm:scale-[1.08] shadow-[0_35px_80px_rgba(0,0,0,0.98)]"
                     : isOtherSelected
                     ? "z-10 opacity-30 scale-[0.98] blur-[0.3px]"
                     : "z-10 opacity-100 scale-100 hover:scale-[1.02]"
@@ -327,7 +372,7 @@ export default function ProjectsCards({ currentFrame }: ProjectsCardsProps) {
 
                     <div className="flex items-center gap-2">
                       <span className="text-[9px] sm:text-[10px] text-zinc-400 uppercase tracking-wider font-mono">
-                        {isSelected ? "[CLICK CERRAR]" : "[CLICK VER DETALLES]"}
+                        {isSelected ? "[CERRAR]" : "[VER DETALLES]"}
                       </span>
                       {isSelected && (
                         <button
@@ -345,7 +390,7 @@ export default function ProjectsCards({ currentFrame }: ProjectsCardsProps) {
                   </div>
 
                   {/* Imagen Principal en Alta Definición (+ contraste y nitidez) */}
-                  <div className="relative w-full h-52 sm:h-58 lg:h-64 rounded-xl overflow-hidden bg-zinc-950 border border-white/15 shadow-inner group-hover:border-white/30 transition-colors">
+                  <div className="relative w-full h-44 sm:h-58 lg:h-64 rounded-xl overflow-hidden bg-zinc-950 border border-white/15 shadow-inner group-hover:border-white/30 transition-colors">
                     <img
                       src={activeImage}
                       alt={proj.title}
@@ -376,9 +421,9 @@ export default function ProjectsCards({ currentFrame }: ProjectsCardsProps) {
 
                   {/* Contenido desplegable POR CLICK */}
                   <div
-                    className={`transition-all duration-300 overflow-hidden flex flex-col gap-3.5 ${
+                    className={`transition-all duration-300 overflow-y-auto no-scrollbar flex flex-col gap-3.5 ${
                       isSelected
-                        ? "max-h-[380px] opacity-100 pt-1.5"
+                        ? "max-h-[290px] sm:max-h-[380px] opacity-100 pt-1.5"
                         : "max-h-0 opacity-0 pt-0"
                     }`}
                   >

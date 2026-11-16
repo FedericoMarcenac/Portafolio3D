@@ -102,3 +102,12 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #333338;
 }
+
+/* Ocultar barra de scroll para carruseles móviles */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

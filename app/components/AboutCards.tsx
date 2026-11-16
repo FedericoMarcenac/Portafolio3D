@@ -80,7 +80,7 @@ export default function AboutCards({ currentFrame }: AboutCardsProps) {
 
   return (
     <div
-      className="w-full max-w-7xl xl:max-w-[1420px] mx-auto flex flex-col md:flex-row gap-5 lg:gap-6 items-stretch select-none transition-opacity duration-200"
+      className="w-full max-w-7xl xl:max-w-[1420px] mx-auto flex flex-col md:flex-row gap-4 md:gap-5 lg:gap-6 items-stretch select-none transition-opacity duration-200 max-h-[72dvh] md:max-h-none overflow-y-auto md:overflow-visible no-scrollbar p-1"
       style={{
         opacity: opacity,
         pointerEvents: opacity > 0.1 ? "auto" : "none",
@@ -92,10 +92,10 @@ export default function AboutCards({ currentFrame }: AboutCardsProps) {
           Agrandada ~20%, más transparente (base glassmorphic) y foto adaptada 3:4
          ======================================================================= */}
       <div
-        className="w-full md:w-[360px] lg:w-[390px] shrink-0 rounded-2xl bg-black/40 backdrop-blur-md border border-white/15 hover:border-violet-400/40 p-5 sm:p-6 flex flex-col justify-between transition-all duration-300 shadow-[0_12px_40px_rgba(0,0,0,0.5)]"
+        className="w-full md:w-[360px] lg:w-[390px] shrink-0 rounded-2xl bg-black/40 backdrop-blur-md border border-white/15 hover:border-violet-400/40 p-4 sm:p-6 flex flex-col justify-between transition-all duration-300 shadow-[0_12px_40px_rgba(0,0,0,0.5)]"
       >
         {/* Cabecera */}
-        <div className="flex items-center justify-between pb-2.5 mb-3 border-b border-white/10 font-mono text-xs">
+        <div className="flex items-center justify-between pb-2 mb-2.5 border-b border-white/10 font-mono text-xs">
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-violet-400 animate-pulse shadow-[0_0_8px_rgba(192,132,252,0.9)]" />
             <span className="font-bold text-white tracking-wider">DEV // PERFIL</span>
@@ -103,67 +103,70 @@ export default function AboutCards({ currentFrame }: AboutCardsProps) {
           <span className="text-[11px] text-emerald-400 font-bold uppercase tracking-wider">ONLINE</span>
         </div>
 
-        {/* Visor de Foto Real - Proporción 3:4 agrandada un ~20% */}
-        <div className="relative w-full max-w-[225px] sm:max-w-[245px] mx-auto aspect-[3/4] rounded-xl overflow-hidden bg-black/30 border border-white/20 shadow-md group">
-          <img
-            src={`${getBasePath()}/profile.jpg`}
-            alt="Federico Marcenac"
-            className="w-full h-full object-cover object-top filter contrast-[1.02] brightness-[1.01] transition-transform duration-500 group-hover:scale-105"
-          />
-          {/* Borde interior sutil */}
-          <div className="absolute inset-0 rounded-xl ring-1 ring-inset ring-white/15 pointer-events-none" />
+        {/* Disposición adaptable: en móvil foto e info lado a lado; en desktop vertical */}
+        <div className="flex flex-row md:flex-col items-center md:items-stretch gap-3.5 md:gap-0">
+          {/* Visor de Foto Real - Proporción 3:4 */}
+          <div className="relative w-24 sm:w-32 md:w-full max-w-[225px] sm:max-w-[245px] shrink-0 mx-auto aspect-[3/4] rounded-xl overflow-hidden bg-black/30 border border-white/20 shadow-md group">
+            <img
+              src={`${getBasePath()}/profile.jpg`}
+              alt="Federico Marcenac"
+              className="w-full h-full object-cover object-top filter contrast-[1.02] brightness-[1.01] transition-transform duration-500 group-hover:scale-105"
+            />
+            {/* Borde interior sutil */}
+            <div className="absolute inset-0 rounded-xl ring-1 ring-inset ring-white/15 pointer-events-none" />
+          </div>
+
+          {/* Bio Real del CV */}
+          <div className="flex-1 md:mt-3.5 flex flex-col gap-1.5 md:gap-2 font-mono">
+            <div>
+              <h3 className="text-base sm:text-lg md:text-xl font-bold text-white tracking-wide">
+                Federico Marcenac
+              </h3>
+              <p className="text-[11px] sm:text-xs md:text-[13px] text-violet-300/90 font-light mt-0.5">
+                Programación • Soporte IT • Help Desk
+              </p>
+            </div>
+
+            <p className="text-[11px] sm:text-xs text-zinc-300 font-sans leading-relaxed line-clamp-2 md:line-clamp-3">
+              Estudiante de Programación (UTN) con sólida experiencia práctica en soporte técnico, diagnóstico de hardware/software, redes y desarrollo web.
+            </p>
+
+            <div className="flex items-center gap-1.5 text-[10px] sm:text-[11px] text-emerald-400 pt-0.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
+              <span className="tracking-wider uppercase font-semibold">DISPONIBLE // FULL-TIME</span>
+            </div>
+          </div>
         </div>
 
-        {/* Bio Real del CV */}
-        <div className="mt-3.5 flex flex-col gap-2 font-mono">
-          <div>
-            <h3 className="text-lg sm:text-xl font-bold text-white tracking-wide">
-              Federico Marcenac
-            </h3>
-            <p className="text-xs sm:text-[13px] text-violet-300/90 font-light mt-0.5">
-              Programación • Soporte IT • Help Desk
-            </p>
+        {/* Ubicación y Enlaces */}
+        <div className="pt-2.5 mt-2.5 border-t border-white/10 flex flex-col gap-2 text-xs font-mono">
+          <div className="flex items-center justify-between text-zinc-400 text-[11px] sm:text-xs">
+            <span>UBICACIÓN:</span>
+            <span className="text-white font-medium">Bahía Blanca, ARG</span>
           </div>
-
-          <p className="text-xs text-zinc-300 font-sans leading-relaxed line-clamp-3">
-            Estudiante de Programación (UTN) con sólida experiencia práctica en soporte técnico, diagnóstico de hardware/software, redes y desarrollo web.
-          </p>
-
-          <div className="flex items-center gap-1.5 text-[11px] text-emerald-400 pt-0.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
-            <span className="tracking-wider uppercase font-semibold">DISPONIBLE // FULL-TIME</span>
-          </div>
-
-          {/* Ubicación y Enlaces */}
-          <div className="pt-2.5 border-t border-white/10 flex flex-col gap-2 text-xs">
-            <div className="flex items-center justify-between text-zinc-400">
-              <span>UBICACIÓN:</span>
-              <span className="text-white font-medium">Bahía Blanca, ARG</span>
-            </div>
-            <div className="flex items-center justify-between gap-2 pt-0.5">
-              <a
-                href="https://linkedin.com/in/federico-marcenac-546ab228b"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex-1 py-1.5 px-2 rounded-md bg-white/[0.06] hover:bg-white/[0.14] text-center text-zinc-200 hover:text-white border border-white/10 transition-colors text-[11px] uppercase font-semibold tracking-wider"
-              >
-                LinkedIn
-              </a>
-              <a
-                href="https://github.com/FedericoMarcenac"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex-1 py-1.5 px-2 rounded-md bg-white/[0.06] hover:bg-white/[0.14] text-center text-zinc-200 hover:text-white border border-white/10 transition-colors text-[11px] uppercase font-semibold tracking-wider"
-              >
-                GitHub
-              </a>
-              <a
-                href="mailto:federicomarcenac14@gmail.com"
-                className="flex-1 py-1.5 px-2 rounded-md bg-violet-500/20 hover:bg-violet-500/35 text-center text-violet-200 hover:text-white border border-violet-400/30 transition-colors text-[11px] uppercase font-semibold tracking-wider"
-              >
-                Email
-              </a>
-            </div>
+          <div className="flex items-center justify-between gap-2 pt-0.5">
+            <a
+              href="https://linkedin.com/in/federico-marcenac-546ab228b"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex-1 py-1.5 px-2 rounded-md bg-white/[0.06] hover:bg-white/[0.14] text-center text-zinc-200 hover:text-white border border-white/10 transition-colors text-[10px] sm:text-[11px] uppercase font-semibold tracking-wider"
+            >
+              LinkedIn
+            </a>
+            <a
+              href="https://github.com/FedericoMarcenac"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex-1 py-1.5 px-2 rounded-md bg-white/[0.06] hover:bg-white/[0.14] text-center text-zinc-200 hover:text-white border border-white/10 transition-colors text-[10px] sm:text-[11px] uppercase font-semibold tracking-wider"
+            >
+              GitHub
+            </a>
+            <a
+              href="mailto:federicomarcenac14@gmail.com"
+              className="flex-1 py-1.5 px-2 rounded-md bg-violet-500/20 hover:bg-violet-500/35 text-center text-violet-200 hover:text-white border border-violet-400/30 transition-colors text-[10px] sm:text-[11px] uppercase font-semibold tracking-wider"
+            >
+              Email
+            </a>
           </div>
         </div>
       </div>

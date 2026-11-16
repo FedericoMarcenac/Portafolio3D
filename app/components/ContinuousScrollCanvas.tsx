@@ -225,12 +225,25 @@ export default function ContinuousScrollCanvas({
       offsetX = 0;
       offsetY = (canvasHeight - drawHeight) / 2;
     } else {
-      drawHeight = canvasHeight;
-      drawWidth = canvasHeight * imgAspect;
-      offsetX = (canvasWidth - drawWidth) / 2;
-      offsetY = 0;
+      // En celulares / pantallas verticales (canvasAspect < 1.0):
+      // Alejamos la toma para que no se recorte excesivamente el fondo ni el personaje
+      if (canvasAspect < 1.0) {
+        const scaleFactor = Math.min(0.95, Math.max(0.55, canvasAspect * 1.30));
+        drawHeight = canvasHeight * scaleFactor;
+        drawWidth = drawHeight * imgAspect;
+        offsetX = (canvasWidth - drawWidth) / 2;
+        offsetY = (canvasHeight - drawHeight) / 2;
+      } else {
+        // En pantallas horizontales se mantiene exactamente igual que ahora
+        drawHeight = canvasHeight;
+        drawWidth = canvasHeight * imgAspect;
+        offsetX = (canvasWidth - drawWidth) / 2;
+        offsetY = 0;
+      }
     }
 
+    ctx.fillStyle = "#000000";
+    ctx.fillRect(0, 0, canvasWidth, canvasHeight);
     ctx.drawImage(img, offsetX, offsetY, drawWidth, drawHeight);
   };
 

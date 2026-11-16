@@ -32,7 +32,7 @@ export default function ContactSection({ currentFrame }: ContactSectionProps) {
 
   return (
     <div
-      className="w-full max-w-5xl mx-auto flex flex-col gap-5 sm:gap-6 select-none transition-opacity duration-200"
+      className="w-full max-w-5xl mx-auto flex flex-col gap-4 sm:gap-6 select-none transition-opacity duration-200 max-h-[72dvh] md:max-h-none overflow-y-auto md:overflow-visible no-scrollbar p-1"
       style={{
         opacity: opacity,
         pointerEvents: opacity > 0.25 ? "auto" : "none",
@@ -42,35 +42,35 @@ export default function ContactSection({ currentFrame }: ContactSectionProps) {
       {/* =======================================================================
           CARTA PRINCIPAL DE CONTACTO (Basada exactamente en contacto.txt)
          ======================================================================= */}
-      <div className="w-full rounded-2xl bg-black/40 backdrop-blur-md border border-white/15 hover:border-emerald-400/40 p-6 sm:p-8 flex flex-col gap-6 shadow-[0_16px_50px_rgba(0,0,0,0.6)]">
+      <div className="w-full rounded-2xl bg-black/40 backdrop-blur-md border border-white/15 hover:border-emerald-400/40 p-4 sm:p-6 lg:p-8 flex flex-col gap-4 sm:gap-6 shadow-[0_16px_50px_rgba(0,0,0,0.6)]">
         
         {/* Cabecera Técnica */}
-        <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-white/10 font-mono text-xs">
-          <div className="flex items-center gap-2.5">
+        <div className="flex flex-wrap items-center justify-between gap-2.5 pb-2.5 border-b border-white/10 font-mono text-xs">
+          <div className="flex items-center gap-2">
             <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_12px_rgba(52,211,153,0.9)]" />
-            <span className="font-bold text-white tracking-widest uppercase">
+            <span className="font-bold text-white tracking-widest uppercase text-[11px] sm:text-xs">
               CONTACTO // FEDERICO MARCENAC
             </span>
           </div>
-          <div className="flex items-center gap-2 text-emerald-400 text-[11px] font-semibold tracking-wider uppercase">
+          <div className="flex items-center gap-1.5 text-emerald-400 text-[10px] sm:text-[11px] font-semibold tracking-wider uppercase">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
             <span>DISPONIBILIDAD INMEDIATA • FULL-TIME</span>
           </div>
         </div>
 
         {/* Título y Mensaje extraído de contacto.txt */}
-        <div className="flex flex-col gap-2">
-          <h3 className="text-2xl sm:text-3xl lg:text-4xl font-mono font-bold text-white tracking-wide">
+        <div className="flex flex-col gap-1.5 sm:gap-2">
+          <h3 className="text-xl sm:text-3xl lg:text-4xl font-mono font-bold text-white tracking-wide">
             Hablemos de tu próximo proyecto.
           </h3>
-          <p className="text-sm sm:text-base text-violet-300 font-mono font-light">
+          <p className="text-xs sm:text-base text-violet-300 font-mono font-light">
             Programador & Técnico en Soporte IT / Help Desk
           </p>
-          <div className="p-4 rounded-xl bg-white/[0.03] border border-white/10 mt-2">
+          <div className="p-3 sm:p-4 rounded-xl bg-white/[0.03] border border-white/10 mt-1 sm:mt-2">
             <p className="text-xs sm:text-sm text-zinc-300 leading-relaxed font-sans italic">
               &ldquo;Abierto a nuevas oportunidades laborales, desarrollo de proyectos de software y soporte técnico integral. ¡Conectemos!&rdquo;
             </p>
-            <span className="block mt-1 text-[11px] font-mono text-zinc-500 uppercase tracking-widest">
+            <span className="block mt-1 text-[10px] sm:text-[11px] font-mono text-zinc-500 uppercase tracking-widest">
               — contacto.txt
             </span>
           </div>
