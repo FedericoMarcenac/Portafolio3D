@@ -52,8 +52,9 @@ const DEVOPS_TECHS: TechBadge[] = [
 
 const getBasePath = (): string => {
   if (typeof window !== "undefined") {
-    if (window.location.pathname.startsWith("/Portafolio3D")) {
-      return "/Portafolio3D";
+    const segments = window.location.pathname.split("/").filter(Boolean);
+    if (segments.length > 0 && segments[0].toLowerCase() === "portafolio3d") {
+      return `/${segments[0]}`;
     }
   }
   return process.env.NEXT_PUBLIC_BASE_PATH || (process.env.NODE_ENV === "production" ? "/Portafolio3D" : "");
