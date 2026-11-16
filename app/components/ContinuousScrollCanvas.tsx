@@ -214,33 +214,12 @@ export default function ContinuousScrollCanvas({
     const imgAspect = imgWidth / imgHeight;
     const canvasAspect = canvasWidth / canvasHeight;
 
-    let drawWidth: number;
-    let drawHeight: number;
-    let offsetX: number;
-    let offsetY: number;
-
-    if (canvasAspect > imgAspect) {
-      drawWidth = canvasWidth;
-      drawHeight = canvasWidth / imgAspect;
-      offsetX = 0;
-      offsetY = (canvasHeight - drawHeight) / 2;
-    } else {
-      // En celulares / pantallas verticales (canvasAspect < 1.0):
-      // Alejamos la toma para que no se recorte excesivamente el fondo ni el personaje
-      if (canvasAspect < 1.0) {
-        const scaleFactor = Math.min(0.95, Math.max(0.55, canvasAspect * 1.30));
-        drawHeight = canvasHeight * scaleFactor;
-        drawWidth = drawHeight * imgAspect;
-        offsetX = (canvasWidth - drawWidth) / 2;
-        offsetY = (canvasHeight - drawHeight) / 2;
-      } else {
-        // En pantallas horizontales se mantiene exactamente igual que ahora
-        drawHeight = canvasHeight;
-        drawWidth = canvasHeight * imgAspect;
-        offsetX = (canvasWidth - drawWidth) / 2;
-        offsetY = 0;
-      }
-    }
+    // Modo Cover completo: llena el 100% de la pantalla sin bordes negros ni arriba ni abajo
+    const scale = Math.max(canvasWidth / imgWidth, canvasHeight / imgHeight);
+    const drawWidth = imgWidth * scale;
+    const drawHeight = imgHeight * scale;
+    const offsetX = (canvasWidth - drawWidth) / 2;
+    const offsetY = (canvasHeight - drawHeight) / 2;
 
     ctx.fillStyle = "#000000";
     ctx.fillRect(0, 0, canvasWidth, canvasHeight);
