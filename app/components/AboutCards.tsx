@@ -50,7 +50,14 @@ const DEVOPS_TECHS: TechBadge[] = [
   { name: "Figma", logo: "https://cdn.simpleicons.org/figma/F24E1E" },
 ];
 
-const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH || "";
+const getBasePath = (): string => {
+  if (typeof window !== "undefined") {
+    if (window.location.pathname.startsWith("/Portafolio3D")) {
+      return "/Portafolio3D";
+    }
+  }
+  return process.env.NEXT_PUBLIC_BASE_PATH || (process.env.NODE_ENV === "production" ? "/Portafolio3D" : "");
+};
 
 export default function AboutCards({ currentFrame }: AboutCardsProps) {
   // Comienza a aparecer en la fase 3 (a partir de frame 320) y se asienta suavemente
@@ -175,7 +182,7 @@ export default function AboutCards({ currentFrame }: AboutCardsProps) {
           {/* Visor de Foto PNG */}
           <div className="relative w-full h-44 sm:h-52 rounded-xl flex items-center justify-center overflow-hidden">
             <img
-              src={`${BASE_PATH}/profile.png`}
+              src={`${getBasePath()}/profile.png`}
               alt="Foto de Perfil"
               onError={(e) => {
                 e.currentTarget.style.display = "none";
