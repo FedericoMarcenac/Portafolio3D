@@ -1,0 +1,132 @@
+================================================================================
+GUIA DE INICIO RAPIDO PARA CLAUDE AI // CLAUDE_START_HERE.txt
+================================================================================
+Hola Claude! Este archivo es tu punto de partida para continuar el desarrollo
+del portafolio web 3D / cinematografico interactivo de Federico Marcenac.
+
+Lee atentamente este resumen antes de inspeccionar el codigo o proponer cambios.
+================================================================================
+
+1. QUE ESTAMOS CONSTRUYENDO
+--------------------------------------------------------------------------------
+Un portafolio web personal y comercial de estetica cinematografica / cyberpunk,
+desarrollado en Next.js (App Router, Turbopack, Tailwind CSS v4, TypeScript).
+El sitio utiliza un motor de scrubbing continuo en Canvas HTML5 donde el scroll
+del usuario reproduce fluidamente 557 fotogramas renderizados a 60 FPS con
+interpolacion LERP, acompanado por interfaces de cristal templado (glassmorphism)
+de alto contraste para presentar los proyectos, trayectoria y contacto del autor.
+
+El titular del portafolio es FEDERICO MARCENAC:
+- Estudiante de Tecnicatura Universitaria en Programacion (UTN FRBB, egreso 2027)
+- Desarrollador Web Frontend & Backend (React, Next.js, Node.js, SQL)
+- Tecnico en Soporte IT / Help Desk con 6+ anos de experiencia practica en el
+  negocio familiar de cerrajeria del automotor y repuestos (Ettonazzem).
+- Ubicacion: Bahia Blanca, Buenos Aires, Argentina.
+- Email: federicomarcenac14@gmail.com
+- Repositorio: https://github.com/FedericoMarcenac/Portafolio3D
+- Sitio en vivo: https://FedericoMarcenac.github.io/Portafolio3D/
+
+
+2. QUE DOCUMENTOS DEBES LEER PRIMERO (EN ESTE ORDEN)
+--------------------------------------------------------------------------------
+1. ../HANDOFF_CLAUDE.md (o HANDOFF_CLAUDE.md en la raiz de Pagina3D):
+   El documento maestro. Contiene la descripcion general, identidad visual,
+   especificacion del proyecto arquitectonico conceptual Torre Umbral,
+   arquitectura tecnica, tabla de estado y decisiones de diseno.
+2. ../ANIMATIONS_SPEC.md:
+   La especificacion matematica de las animaciones. Explica la formula LERP (0.12),
+   el mapeo exacto de los 557 frames continuos a lo largo de los 950vh de scroll,
+   las curvas de entrada y salida lateral hacia la izquierda de proyectos,
+   el fundido suave de Sobre Mi en el frame 495 y la mutacion a Contacto en 533.
+3. ../ASSETS_INVENTORY.md:
+   El inventario exhaustivo de cada imagen, resolucion (1080p, 720p, etc.), peso,
+   videos fuentes y los renders de Torre Umbral que estan listos en el Escritorio.
+4. ../README.md o README.md:
+   Como compilar, ejecutar y publicar en GitHub Pages.
+
+
+3. QUE ARCHIVOS DE CODIGO DEBES INSPECCIONAR
+--------------------------------------------------------------------------------
+Todos los archivos fuente estan dentro de esta misma carpeta "my-app/":
+- app/page.tsx:
+  El orquestador de la SPA. Define el contenedor de 950vh, el sticky viewport de
+  100dvh y monta las capas sincronizadas con globalFrame.
+- app/components/ContinuousScrollCanvas.tsx:
+  El motor canvas continuo que carga y dibuja los 557 frames con DPR cap 2 y modo
+  cover total sin franjas negras.
+- app/components/ProjectsCards.tsx:
+  Las 4 tarjetas de proyectos con cables ciberneticos SVG interactivos, animacion
+  de entrada lateral y salida hacia la izquierda, y carrusel snap para celulares.
+- app/components/AboutCards.tsx:
+  Perfil personal con foto 3:4 real, formacion UTN + Coderhouse y stack badges.
+- app/components/ContactSection.tsx:
+  Tarjeta de contacto con boton funcional para copiar email y links a redes.
+- app/globals.css:
+  Text-shadows de neón con pixel outline perimetral de 8 direcciones para legibilidad.
+- next.config.ts:
+  Configuracion de export estatico (output: 'export') y basePath para GitHub Pages.
+
+
+4. QUE PARTES YA ESTAN TERMINADAS (NO LAS REINICIES)
+--------------------------------------------------------------------------------
+[x] Canvas continuo de 557 frames sin parpadeos ni cortes.
+[x] Portada Hero (portafolio.txt) con animacion inicial y pixel outline verde esmeralda.
+[x] Seccion Proyectos (proyectos.txt) con los 4 proyectos reales y cables SVG reactivos.
+[x] Seccion Sobre Mi (sobreMi.txt) con bio real, foto de Federico Marcenac y stack.
+[x] Seccion Contacto (contacto.txt) con copiado interactivo de email y datos reales.
+[x] Diseno 100% responsivo para celulares y desktop sin bordes negros (modo cover).
+[x] Pipeline CI/CD automatizado en GitHub Pages con static export en /Portafolio3D.
+
+
+5. QUE FALTA HACER (PROXIMOS PASOS)
+--------------------------------------------------------------------------------
+1. INTEGRAR EL PROYECTO ARQUITECTONICO CONCEPTUAL "TORRE UMBRAL":
+   - Es un proyecto conceptual (edificio de 12 pisos + Planta Baja, 3 tipologias
+     de departamentos: A, B y C).
+   - En el Escritorio del usuario (C:\Users\feder\OneDrive\Desktop\) ya existen
+     8 renders PNG en resolucion 1672x941:
+     * torre-umbral-hero.png
+     * torre-umbral-fachada.png
+     * departamento-b-maqueta.png (corte en planta)
+     * departamento-b-living.png
+     * departamento-b-cocina.png
+     * departamento-b-dormitorio.png
+     * departamento-b-bano.png
+     * departamento-b-balcon.png
+   - Tarea: Copiar estos renders a public/projects/torre-umbral/ y crear
+     un modulo interactivo (modal inmersivo o vista dedicada) que permita:
+     * Seleccionar los pisos del edificio con efecto hover.
+     * Hacer una transicion cinematica desde la fachada hacia el interior.
+     * Explorar los planos, cotas y renders fotorrealistas de cada ambiente.
+     * Navegacion clara para regresar a la vista del edificio.
+2. LIMPIEZA DE ASSETS DUPLICADOS EN public/ (OPCIONAL):
+   - Eliminar los archivos .zip (~110 MB) y la carpeta redundante FramesMedio
+     cuando el usuario lo autorice, manteniendo intactos los que el codigo consume.
+
+
+6. QUE DECISIONES NO DEBES CAMBIAR
+--------------------------------------------------------------------------------
+- NO cambies la salida estatica (output: 'export'). El hosting es GitHub Pages.
+- NO uses rutas absolutas duras como "/Frames/..." en los componentes; usa siempre
+  el helper getBasePath() o NEXT_PUBLIC_BASE_PATH para soportar /Portafolio3D.
+- NO elimines las clases de pixel-text ni el fondo negro puro: garantizan que los
+  textos se lean con total nitidez sobre cualquier fotograma del video.
+- NO reemplaces el canvas por un elemento <video>: el elemento video no soporta
+  scrubbing bidireccional suave cuadro a cuadro sin tirones.
+- NO inventes datos personales ni cambies el nombre de Federico Marcenac.
+- NO marques Torre Umbral como obra real construida: debe quedar explicitamente
+  documentado como proyecto conceptual / maqueta arquitectonica 3D.
+
+
+7. COMO CONTINUAR SIN ROMPER EL TRABAJO EXISTENTE
+--------------------------------------------------------------------------------
+- Para probar localmente:
+  npm run dev
+- Para verificar compilacion:
+  npm run build
+  (Debe terminar con "Compiled successfully" y generar la carpeta "out/")
+- Al agregar nuevos componentes, respeta la estructura modular existente en
+  app/components/ y el sistema de animaciones basado en globalFrame.
+
+Exitos con el desarrollo! Tenes todo el contexto necesario en ../HANDOFF_CLAUDE.md.
+================================================================================

@@ -49,23 +49,23 @@ export default function Home() {
               FASE 1 (Frames 1 a 140): Portada con portafolio.txt
              ======================================================== */}
           <div
-            className={`relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-10 lg:px-16 pb-4 sm:pb-8 lg:pb-12 flex items-end justify-between pointer-events-none select-none transition-opacity duration-700 ${
+            className={`relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-10 lg:px-16 pb-12 sm:pb-20 lg:pb-28 flex items-end justify-between pointer-events-none select-none transition-opacity duration-700 ${
               globalFrame <= 140 ? "opacity-100" : "opacity-0"
             }`}
           >
             {/* Título portafolio.txt libre sin cuadrante de fondo, con color neón y contorno pixelado */}
-            <div className="flex flex-col items-start gap-1 font-mono">
-              <span className="text-[9px] sm:text-[11px] tracking-widest uppercase flex items-center gap-1.5 pixel-outline-white">
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_10px_rgba(52,211,153,0.9)]" />
+            <div className="flex flex-col items-start gap-1.5 sm:gap-2 font-mono">
+              <span className="text-xs sm:text-sm tracking-widest uppercase flex items-center gap-2 pixel-outline-white">
+                <span className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_12px_rgba(52,211,153,0.95)]" />
                 <span className="text-zinc-200 font-semibold">INDEX // HOME</span>
               </span>
-              <h1 className="text-xl sm:text-3xl md:text-4xl font-mono font-bold tracking-wider pixel-text-emerald lowercase">
+              <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-mono font-bold tracking-wider pixel-text-emerald lowercase">
                 portafolio.txt
               </h1>
             </div>
 
             {/* Indicador de scroll libre */}
-            <div className="text-[9px] sm:text-[11px] font-mono tracking-widest uppercase flex items-center gap-1.5 sm:gap-2 pixel-outline-white">
+            <div className="text-xs sm:text-sm font-mono tracking-widest uppercase flex items-center gap-1.5 sm:gap-2 pixel-outline-white pb-1 sm:pb-2">
               <span className="text-emerald-400 font-bold">[</span>
               <span className="text-zinc-200 font-medium">SCROLL TO EXPLORE</span>
               <span className="text-emerald-400 font-bold">]</span>
@@ -88,22 +88,22 @@ export default function Home() {
               <ProjectsCards currentFrame={globalFrame} />
             </div>
 
-            {/* Parte inferior: Título pequeño proyectos.txt libre sin cuadrante de fondo */}
-            <div className="w-full max-w-7xl mx-auto px-4 sm:px-10 lg:px-16 pb-4 sm:pb-8 lg:pb-12 flex items-end justify-between select-none">
+            {/* Parte inferior: Título proyectos.txt libre sin cuadrante de fondo */}
+            <div className="w-full max-w-7xl mx-auto px-4 sm:px-10 lg:px-16 pb-8 sm:pb-12 lg:pb-16 flex items-end justify-between select-none">
               
-              {/* Título pequeño: proyectos.txt con contorno pixelado y color neón cian */}
-              <div className="flex flex-col items-start gap-1 font-mono">
-                <span className="text-[9px] sm:text-[11px] tracking-widest uppercase flex items-center gap-1.5 pixel-outline-white">
-                  <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse shadow-[0_0_10px_rgba(56,189,248,0.9)]" />
+              {/* Título proyectos.txt con contorno pixelado y color neón cian */}
+              <div className="flex flex-col items-start gap-1.5 sm:gap-2 font-mono">
+                <span className="text-xs sm:text-sm tracking-widest uppercase flex items-center gap-2 pixel-outline-white">
+                  <span className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-cyan-400 animate-pulse shadow-[0_0_12px_rgba(56,189,248,0.95)]" />
                   <span className="text-zinc-200 font-semibold">SECTION // WORK</span>
                 </span>
-                <h2 className="text-xl sm:text-3xl md:text-4xl font-mono font-bold tracking-wider pixel-text-cyan lowercase">
+                <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-mono font-bold tracking-wider pixel-text-cyan lowercase">
                   proyectos.txt
                 </h2>
               </div>
 
               {/* Indicador de sección activa libre */}
-              <div className="text-[9px] sm:text-[11px] font-mono tracking-widest uppercase flex items-center gap-1.5 sm:gap-2 pixel-outline-white">
+              <div className="text-xs sm:text-sm font-mono tracking-widest uppercase flex items-center gap-1.5 sm:gap-2 pixel-outline-white pb-1 sm:pb-2">
                 <span className="text-cyan-400 font-bold">[</span>
                 <span className="text-zinc-200 font-medium">FEATURED PROJECTS</span>
                 <span className="text-cyan-400 font-bold">]</span>
@@ -142,19 +142,19 @@ export default function Home() {
 
             {/* Parte inferior: Título dinámico (sobreMi.txt -> contacto.txt al entrar en frame 126 de FramesSalto) */}
             <div
-              className={`w-full max-w-7xl mx-auto px-4 sm:px-10 lg:px-16 pb-4 sm:pb-8 flex items-end justify-between select-none transition-opacity duration-500 ${
+              className={`w-full max-w-7xl mx-auto px-4 sm:px-10 lg:px-16 pb-8 sm:pb-12 lg:pb-16 flex items-end justify-between select-none transition-opacity duration-500 ${
                 globalFrame >= 335 ? "opacity-100" : "opacity-0"
               }`}
             >
               
-              {/* Título pequeño con cambio de color y texto dinámico */}
-              <div className="flex flex-col items-start gap-1 font-mono transition-all duration-300">
-                <span className="text-[9px] sm:text-[11px] tracking-widest uppercase flex items-center gap-1.5 pixel-outline-white">
+              {/* Título dinámico con cambio de color y texto */}
+              <div className="flex flex-col items-start gap-1.5 sm:gap-2 font-mono transition-all duration-300">
+                <span className="text-xs sm:text-sm tracking-widest uppercase flex items-center gap-2 pixel-outline-white">
                   <span
-                    className={`w-2 h-2 rounded-full animate-pulse transition-colors duration-500 ${
+                    className={`w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full animate-pulse transition-colors duration-500 ${
                       globalFrame >= 533
-                        ? "bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.9)]"
-                        : "bg-violet-400 shadow-[0_0_10px_rgba(192,132,252,0.9)]"
+                        ? "bg-emerald-400 shadow-[0_0_12px_rgba(52,211,153,0.95)]"
+                        : "bg-violet-400 shadow-[0_0_12px_rgba(192,132,252,0.95)]"
                     }`}
                   />
                   <span className="text-zinc-200 font-semibold">
@@ -162,7 +162,7 @@ export default function Home() {
                   </span>
                 </span>
                 <h2
-                  className={`text-xl sm:text-3xl md:text-4xl font-mono font-bold tracking-wider lowercase transition-all duration-500 ${
+                  className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-mono font-bold tracking-wider lowercase transition-all duration-500 ${
                     globalFrame >= 533 ? "pixel-text-emerald" : "pixel-text-violet"
                   }`}
                 >
@@ -171,7 +171,7 @@ export default function Home() {
               </div>
 
               {/* Indicador de sección activa */}
-              <div className="text-[9px] sm:text-[11px] font-mono tracking-widest uppercase flex items-center gap-1.5 sm:gap-2 pixel-outline-white">
+              <div className="text-xs sm:text-sm font-mono tracking-widest uppercase flex items-center gap-1.5 sm:gap-2 pixel-outline-white pb-1 sm:pb-2">
                 <span
                   className={`font-bold transition-colors duration-500 ${
                     globalFrame >= 533 ? "text-emerald-400" : "text-violet-400"

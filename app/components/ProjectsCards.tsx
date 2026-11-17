@@ -324,7 +324,7 @@ export default function ProjectsCards({ currentFrame }: ProjectsCardsProps) {
             }
           }
         }}
-        className="flex sm:grid grid-cols-1 sm:grid-cols-2 grid-rows-none sm:grid-rows-2 w-full max-h-[75dvh] sm:max-h-none overflow-x-auto sm:overflow-visible snap-x snap-mandatory sm:snap-none no-scrollbar max-w-[1580px] gap-4 sm:gap-x-12 sm:gap-y-6 lg:gap-x-16 lg:gap-y-8 items-center justify-start sm:justify-items-center px-4 sm:px-0 py-2"
+        className="flex sm:grid grid-cols-1 sm:grid-cols-2 grid-rows-none sm:grid-rows-2 w-full max-h-[75dvh] sm:max-h-none overflow-x-auto sm:overflow-visible snap-x snap-mandatory sm:snap-none no-scrollbar max-w-[1580px] gap-4 sm:gap-x-10 sm:gap-y-4 lg:gap-x-14 lg:gap-y-5 items-center justify-start sm:justify-items-center px-4 sm:px-0 py-1"
       >
         {projects.map((proj) => {
           const isSelected = selectedId === proj.id;
@@ -408,7 +408,7 @@ export default function ProjectsCards({ currentFrame }: ProjectsCardsProps) {
                   </div>
 
                   {/* Imagen Principal en Alta Definición (+ contraste y nitidez) */}
-                  <div className="relative w-full h-44 sm:h-58 lg:h-64 rounded-xl overflow-hidden bg-zinc-950 border border-white/15 shadow-inner group-hover:border-white/30 transition-colors">
+                  <div className="relative w-full h-44 sm:h-50 lg:h-56 rounded-xl overflow-hidden bg-zinc-950 border border-white/15 shadow-inner group-hover:border-white/30 transition-colors">
                     <img
                       src={activeImage}
                       alt={proj.title}
